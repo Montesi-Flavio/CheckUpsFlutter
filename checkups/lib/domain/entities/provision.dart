@@ -11,6 +11,7 @@ class Provision {
   final String? notes;
   final DateTime? completionDate;
   final String? attachmentPath;
+  final String? soggettiEsposti;
 
   const Provision({
     this.id = Isar.autoIncrement,
@@ -22,6 +23,7 @@ class Provision {
     this.notes,
     this.completionDate,
     this.attachmentPath,
+    this.soggettiEsposti,
   });
 
   Provision copyWith({
@@ -34,6 +36,7 @@ class Provision {
     String? notes,
     DateTime? completionDate,
     String? attachmentPath,
+    String? soggettiEsposti,
   }) {
     return Provision(
       id: id ?? this.id,
@@ -45,6 +48,7 @@ class Provision {
       notes: notes ?? this.notes,
       completionDate: completionDate ?? this.completionDate,
       attachmentPath: attachmentPath ?? this.attachmentPath,
+      soggettiEsposti: soggettiEsposti ?? this.soggettiEsposti,
     );
   }
 
@@ -59,6 +63,7 @@ class Provision {
       notes: json['notes'] as String?,
       completionDate: json['completionDate'] != null ? DateTime.parse(json['completionDate'] as String) : null,
       attachmentPath: json['attachmentPath'] as String?,
+      soggettiEsposti: json['soggettiEsposti'] as String?,
     );
   }
 
@@ -73,12 +78,13 @@ class Provision {
       'notes': notes,
       'completionDate': completionDate?.toIso8601String(),
       'attachmentPath': attachmentPath,
+      'soggettiEsposti': soggettiEsposti,
     };
   }
 
   @override
   String toString() {
-    return 'Provision(id: $id, name: $name, objectId: $objectId, dueDate: $dueDate, isCompleted: $isCompleted, description: $description, notes: $notes, completionDate: $completionDate, attachmentPath: $attachmentPath)';
+    return 'Provision(id: $id, name: $name, objectId: $objectId, dueDate: $dueDate, isCompleted: $isCompleted, description: $description, notes: $notes, completionDate: $completionDate, attachmentPath: $attachmentPath, soggettiEsposti: $soggettiEsposti)';
   }
 
   @override
@@ -93,7 +99,8 @@ class Provision {
         other.description == description &&
         other.notes == notes &&
         other.completionDate == completionDate &&
-        other.attachmentPath == attachmentPath;
+        other.attachmentPath == attachmentPath &&
+        other.soggettiEsposti == soggettiEsposti;
   }
 
   @override
@@ -108,6 +115,7 @@ class Provision {
       notes,
       completionDate,
       attachmentPath,
+      soggettiEsposti,
     );
   }
 }
