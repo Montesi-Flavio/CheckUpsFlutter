@@ -10,7 +10,8 @@ class CompaniesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(companyStateProvider);
+    final companyProvider = ref.watch(companyStateProvider);
+    final state = companyProvider;
 
     return Scaffold(
       appBar: AppBar(
@@ -22,14 +23,14 @@ class CompaniesPage extends ConsumerWidget {
           ),
         ],
       ),
-      body: state.isLoading
+      body: companyProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
-          : state.error != null
+          : companyProvider.error != null
               ? Center(child: Text('Errore: ${state.error}'))
               : ListView.builder(
-                  itemCount: state.companies.length,
+                  itemCount: companyProvider.companies.length,
                   itemBuilder: (context, index) {
-                    final company = state.companies[index];
+                    final company = companyProvider.companies[index];
                     return _CompanyCard(company: company);
                   },
                 ),

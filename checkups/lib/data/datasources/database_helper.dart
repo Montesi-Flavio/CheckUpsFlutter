@@ -121,11 +121,11 @@ class DatabaseHelper {
     // Many-to-many relationships
     await db.execute('''
       CREATE TABLE department_titles (
-        departmentId INTEGER NOT NULL,
-        titleId INTEGER NOT NULL,
-        PRIMARY KEY (departmentId, titleId),
-        FOREIGN KEY (departmentId) REFERENCES departments (id) ON DELETE CASCADE,
-        FOREIGN KEY (titleId) REFERENCES titles (id) ON DELETE CASCADE
+        department_id INTEGER NOT NULL,
+        title_id INTEGER NOT NULL,
+        PRIMARY KEY (department_id, title_id),
+        FOREIGN KEY (department_id) REFERENCES departments (id) ON DELETE CASCADE,
+        FOREIGN KEY (title_id) REFERENCES titles (id) ON DELETE CASCADE
       )
     ''');
   }

@@ -1,3 +1,4 @@
+import 'package:checkups/presentation/state/database_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/repositories/department_repository_impl.dart';
 import '../../domain/entities/index.dart';
@@ -9,8 +10,8 @@ final departmentStateProvider = StateNotifierProvider<DepartmentNotifier, Depart
 });
 
 final departmentRepositoryProvider = Provider((ref) {
-  final isar = ref.watch(isarProvider);
-  return DepartmentRepositoryImpl(isar);
+  final db = ref.watch(databaseProvider);
+  return DepartmentRepositoryImpl(db);
 });
 
 class DepartmentNotifier extends StateNotifier<DepartmentState> {

@@ -1,14 +1,29 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/company.dart';
 
-part 'company_state.freezed.dart';
+class CompanyState {
+  final List<Company> companies;
+  final bool isLoading;
+  final String? error;
+  final Company? selectedCompany;
 
-@freezed
-class CompanyState with _$CompanyState {
-  const factory CompanyState({
-    @Default([]) List<Company> companies,
-    @Default(false) bool isLoading,
-    @Default(null) String? error,
-    @Default(null) Company? selectedCompany,
-  }) = _CompanyState;
+  const CompanyState({
+    this.companies = const [],
+    this.isLoading = false,
+    this.error,
+    this.selectedCompany,
+  });
+
+  CompanyState copyWith({
+    List<Company>? companies,
+    bool? isLoading,
+    String? error,
+    Company? selectedCompany,
+  }) {
+    return CompanyState(
+      companies: companies ?? this.companies,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+      selectedCompany: selectedCompany ?? this.selectedCompany,
+    );
+  }
 }

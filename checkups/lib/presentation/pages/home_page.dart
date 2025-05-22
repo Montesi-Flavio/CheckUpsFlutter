@@ -1,6 +1,6 @@
+import 'package:checkups/presentation/state/database_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../state/isar_provider.dart';
 import 'companies_page.dart';
 
 class HomePage extends ConsumerWidget {
@@ -8,15 +8,8 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isarAsync = ref.watch(isarInitializerProvider);
-
-    return Scaffold(
-      body: isarAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Errore: $error')),
-        data: (_) => const _HomeContent(),
-      ),
-    );
+    final db = ref.watch(databaseProvider);
+    return const _HomeContent();
   }
 }
 

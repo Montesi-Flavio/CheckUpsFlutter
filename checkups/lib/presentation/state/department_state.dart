@@ -16,4 +16,20 @@ class DepartmentState {
     this.selectedDepartment,
     this.selectedLocalUnitId,
   });
+
+  DepartmentState copyWith({
+    List<Department>? departments,
+    bool? isLoading,
+    String? error,
+    Department? selectedDepartment,
+    int? selectedLocalUnitId,
+  }) {
+    return DepartmentState(
+      departments: departments ?? this.departments,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+      selectedDepartment: selectedDepartment ?? this.selectedDepartment,
+      selectedLocalUnitId: selectedLocalUnitId ?? this.selectedLocalUnitId,
+    );
+  }
 }

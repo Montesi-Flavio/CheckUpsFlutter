@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:isar/isar.dart';
+
 import '../../domain/entities/index.dart';
 import '../state/department_provider.dart';
 
@@ -65,7 +65,7 @@ class DepartmentForm extends ConsumerWidget {
                   if (formKey.currentState?.saveAndValidate() ?? false) {
                     final data = formKey.currentState!.value;
                     final department = Department(
-                      id: this.department?.id ?? Isar.autoIncrement,
+                      id: this.department?.id ?? 0,
                       name: data['name'],
                       localUnitId: localUnitId,
                       description: data['description'],

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/index.dart';
-import '../state/department_provider.dart';
-import '../state/local_unit_provider.dart';
-import '../widgets/department_form.dart';
+import 'package:checkups/domain/entities/index.dart';
+import 'package:checkups/presentation/state/department_provider.dart';
+import 'package:checkups/presentation/state/local_unit_provider.dart';
+import 'package:checkups/presentation/widgets/department_form.dart';
 import 'titles_page.dart';
 
 class DepartmentsPage extends ConsumerWidget {

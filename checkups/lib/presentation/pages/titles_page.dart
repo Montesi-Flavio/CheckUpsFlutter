@@ -1,10 +1,10 @@
+import 'package:checkups/presentation/pages/objects_page.dart';
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/index.dart';
 import '../state/title_provider.dart';
 import '../state/department_provider.dart';
 import '../widgets/title_form.dart';
-import 'objects_page.dart';
 
 class TitlesPage extends ConsumerWidget {
   final int departmentId;

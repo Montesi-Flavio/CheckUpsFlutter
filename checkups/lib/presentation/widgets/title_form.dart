@@ -2,7 +2,6 @@ import 'package:flutter/material.dart' hide Title;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:isar/isar.dart';
 import '../../domain/entities/index.dart';
 import '../state/title_provider.dart';
 
@@ -80,7 +79,7 @@ class _TitleFormState extends ConsumerState<TitleForm> {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
       final data = _formKey.currentState!.value;
       final title = Title(
-        id: widget.title?.id ?? Isar.autoIncrement,
+        id: widget.title?.id ?? 0,
         name: data['name'],
         departmentId: widget.departmentId,
         description: data['description'],

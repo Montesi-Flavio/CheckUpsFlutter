@@ -1,9 +1,7 @@
-import 'package:isar/isar.dart';
 import 'package:flutter/foundation.dart';
 
-@Collection()
 class LocalUnit {
-  final Id id;
+  final int id;
   final String name;
   final int companyId;
   final String? address;
@@ -17,7 +15,7 @@ class LocalUnit {
   final List<int> departmentIds;
 
   const LocalUnit({
-    this.id = Isar.autoIncrement,
+    this.id = -1,
     required this.name,
     required this.companyId,
     this.address,
@@ -33,7 +31,7 @@ class LocalUnit {
 
   // Copia dell'oggetto con possibilità di modificare alcuni campi
   LocalUnit copyWith({
-    Id? id,
+    int? id,
     String? name,
     int? companyId,
     String? address,
@@ -65,7 +63,7 @@ class LocalUnit {
   // Conversione da Map a Oggetto
   factory LocalUnit.fromJson(Map<String, dynamic> json) {
     return LocalUnit(
-      id: json['id'] as int? ?? Isar.autoIncrement,
+      id: json['id'] as int? ?? -1,
       name: json['name'] as String,
       companyId: json['companyId'] as int,
       address: json['address'] as String?,

@@ -1,21 +1,15 @@
-import 'package:isar/isar.dart';
 import 'package:flutter/foundation.dart';
 
-@Collection()
-class Title {  final Id id;
-
-  @Index(type: IndexType.value)
+class Title {
+  final int id;
   final String name;
-
-  @Index(type: IndexType.value)
-  final int departmentId;  final String? description;
+  final int departmentId;
+  final String? description;
   final String? notes;
-  
-  @Index()
   final List<int> objectIds;
 
   const Title({
-    this.id = Isar.autoIncrement,
+    this.id = -1,
     required this.name,
     required this.departmentId,
     this.description,
@@ -24,7 +18,7 @@ class Title {  final Id id;
   });
 
   Title copyWith({
-    Id? id,
+    int? id,
     String? name,
     int? departmentId,
     String? description,
@@ -43,7 +37,7 @@ class Title {  final Id id;
 
   factory Title.fromJson(Map<String, dynamic> json) {
     return Title(
-      id: json['id'] as int? ?? Isar.autoIncrement,
+      id: json['id'] as int? ?? -1,
       name: json['name'] as String,
       departmentId: json['departmentId'] as int,
       description: json['description'] as String?,

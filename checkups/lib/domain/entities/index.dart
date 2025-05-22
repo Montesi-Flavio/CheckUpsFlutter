@@ -4,5 +4,4 @@ export 'local_unit.dart';
 export 'department.dart';
 export 'title.dart';
 export 'checkup_item.dart';
-export 'checkup_object.dart';
 export 'provision.dart';

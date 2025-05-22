@@ -1,23 +1,16 @@
-import 'package:isar/isar.dart';
 import 'package:flutter/foundation.dart';
 
-@Collection()
 class Department {
-  final Id id;
-
-  @Index(type: IndexType.value)
+  final int id;
   final String name;
-
-  @Index(type: IndexType.value)
   final int localUnitId;
   final String? description;
   final String? notes;
 
-  @Index()
   final List<int> titleIds;
 
   const Department({
-    this.id = Isar.autoIncrement,
+    this.id = -1,
     required this.name,
     required this.localUnitId,
     this.description,
@@ -26,7 +19,7 @@ class Department {
   });
 
   Department copyWith({
-    Id? id,
+    int? id,
     String? name,
     int? localUnitId,
     String? description,
@@ -45,7 +38,7 @@ class Department {
 
   factory Department.fromJson(Map<String, dynamic> json) {
     return Department(
-      id: json['id'] as int? ?? Isar.autoIncrement,
+      id: json['id'] as int? ?? -1,
       name: json['name'] as String,
       localUnitId: json['localUnitId'] as int,
       description: json['description'] as String?,

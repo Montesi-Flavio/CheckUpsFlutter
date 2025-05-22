@@ -132,7 +132,7 @@ class _LocalUnitFormState extends ConsumerState<LocalUnitForm> {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
       final data = _formKey.currentState!.value;
       final localUnit = LocalUnit(
-        id: widget.localUnit?.id ?? Isar.autoIncrement,
+        id: widget.localUnit?.id ?? 0,
         name: data['name'],
         companyId: widget.companyId,
         address: data['address'],

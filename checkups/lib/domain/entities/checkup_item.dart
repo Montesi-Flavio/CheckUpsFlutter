@@ -1,22 +1,19 @@
-import 'package:isar/isar.dart';
-
-@Collection()
-class Object {
-  final Id id;
+class CheckupItem {
+  final int id;
   final String name;
   final int priority;
   final int titleId;
 
-  const Object({
-    this.id = Isar.autoIncrement,
+  const CheckupItem({
+    this.id = -1,
     required this.name,
     required this.priority,
     required this.titleId,
   });
 
   // Copia dell'oggetto con possibilità di modificare alcuni campi
-  Object copyWith({
-    Id? id,
+  CheckupItem copyWith({
+    int? id,
     String? name,
     int? priority,
     int? titleId,
@@ -30,9 +27,9 @@ class Object {
   }
 
   // Conversione da Map a Oggetto
-  factory Object.fromJson(Map<String, dynamic> json) {
-    return Object(
-      id: json['id'] as int? ?? Isar.autoIncrement,
+  factory CheckupItem.fromJson(Map<String, dynamic> json) {
+    return CheckupItem(
+      id: json['id'] as int? ?? -1,
       name: json['name'] as String,
       priority: json['priority'] as int,
       titleId: json['titleId'] as int,
@@ -57,7 +54,7 @@ class Object {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other.id == id && other.name == name && other.priority == priority && other.titleId == titleId;
+    return other is CheckupItem && other.id == id && other.name == name && other.priority == priority && other.titleId == titleId;
   }
 
   @override

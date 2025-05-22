@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:isar/isar.dart';
 import '../../domain/entities/index.dart';
 import '../state/company_provider.dart';
 
@@ -17,6 +16,7 @@ class CompanyForm extends ConsumerStatefulWidget {
 
 class _CompanyFormState extends ConsumerState<CompanyForm> {
   final _formKey = GlobalKey<FormBuilderState>();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -139,8 +139,10 @@ class _CompanyFormState extends ConsumerState<CompanyForm> {
               ),
               const SizedBox(width: 16),
               ElevatedButton(
-                onPressed: _submitForm,
-                child: Text(widget.company != null ? 'SALVA' : 'CREA'),
+                onPressed: _isLoading ? null : _submitForm,
+                child: _isLoading
+                    ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                    : Text(widget.company != null ? 'SALVA' : 'CREA'),
               ),
             ],
           ),
@@ -149,32 +151,43 @@ class _CompanyFormState extends ConsumerState<CompanyForm> {
     );
   }
 
-  void _submitForm() {
-    if (_formKey.currentState?.saveAndValidate() ?? false) {
-      final data = _formKey.currentState!.value;
-      final company = Company(
-        id: widget.company?.id ?? Isar.autoIncrement,
-        name: data['name'],
-        fiscalCode: data['fiscalCode'],
-        vatNumber: data['vatNumber'],
-        address: data['address'],
-        city: data['city'],
-        province: data['province'],
-        postalCode: data['postalCode'],
-        country: data['country'],
-        phone: data['phone'],
-        email: data['email'],
-        pec: data['pec'],
-        notes: data['notes'],
-      );
+  void _submitForm() async {
+    if (!(_formKey.currentState?.saveAndValidate() ?? false)) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please fix the errors before submitting')));
+      return;
+    }
 
+    setState(() => _isLoading = true);
+    final data = _formKey.currentState!.value;
+    final company = Company(
+      id: widget.company?.id ?? 0,
+      name: data['name'],
+      fiscalCode: data['fiscalCode'],
+      vatNumber: data['vatNumber'],
+      address: data['address'],
+      city: data['city'],
+      province: data['province'],
+      postalCode: data['postalCode'],
+      country: data['country'],
+      phone: data['phone'],
+      email: data['email'],
+      pec: data['pec'],
+      notes: data['notes'],
+    );
+
+    try {
       if (widget.company != null) {
-        ref.read(companyStateProvider.notifier).updateCompany(company);
+        await ref.read(companyStateProvider.notifier).updateCompany(company);
       } else {
-        ref.read(companyStateProvider.notifier).addCompany(company);
+        await ref.read(companyStateProvider.notifier).addCompany(company);
       }
-
-      Navigator.pop(context);
+      if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 }
