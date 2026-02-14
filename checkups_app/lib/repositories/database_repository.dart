@@ -239,7 +239,7 @@ class DatabaseRepository {
 
     await _pool.execute(
       Sql.named(
-        'INSERT INTO public.societa (id_societa, nome, localita, provincia, telefono, descrizione, indirizzo, partita_iva, codice_fiscale, banca_appoggio, codice_ateco, logo) VALUES (@id, @nome, @localita, @provincia, @telefono, @descrizione, @indirizzo, @partitaIva, @codiceFiscale, @bancaAppoggio, @codiceAteco, @logo)',
+        'INSERT INTO public.societa (id_societa, nome, localita, provincia, telefono, descrizione, indirizzo, partita_iva, codice_fiscale, banca_appoggio, codice_ateco, logo) VALUES (@id, @nome, @localita, @provincia, @telefono, @descrizione, @indirizzo, @partitaIva, @codiceFiscale, @bancaAppoggio, @codiceAteco, @logo:bytea)',
       ),
       parameters: {
         'id': nextId,
@@ -346,13 +346,13 @@ class DatabaseRepository {
   }
 
   Future<void> updateCampoBinary(String tableName, String pkName, int id, String campo, Uint8List? value) async {
-    await _pool.execute(Sql.named('UPDATE public.$tableName SET $campo = @value WHERE $pkName = @id'), parameters: {'id': id, 'value': value});
+    await _pool.execute(Sql.named('UPDATE public.$tableName SET $campo = @value:bytea WHERE $pkName = @id'), parameters: {'id': id, 'value': value});
   }
 
   Future<void> updateSocieta(Societa societa) async {
     await _pool.execute(
       Sql.named(
-        'UPDATE public.societa SET nome = @nome, localita = @localita, provincia = @provincia, telefono = @telefono, descrizione = @descrizione, indirizzo = @indirizzo, partita_iva = @partitaIva, codice_fiscale = @codiceFiscale, banca_appoggio = @bancaAppoggio, codice_ateco = @codiceAteco, logo = @logo WHERE id_societa = @id',
+        'UPDATE public.societa SET nome = @nome, localita = @localita, provincia = @provincia, telefono = @telefono, descrizione = @descrizione, indirizzo = @indirizzo, partita_iva = @partitaIva, codice_fiscale = @codiceFiscale, banca_appoggio = @bancaAppoggio, codice_ateco = @codiceAteco, logo = @logo:bytea WHERE id_societa = @id',
       ),
       parameters: {
         'id': societa.id,
