@@ -35,8 +35,8 @@ L'obiettivo del progetto è fornire un'interfaccia utente pulita, intuitiva e re
 
 * **Framework:** [Flutter](https://flutter.dev/)
 * **Linguaggio:** [Dart](https://dart.dev/)
-* **State Management:** [Provider / Riverpod / BLoC / GetX - specifica quello che hai usato]
-* **Database:** [Hive / SQLite / Firebase Firestore / SharedPreferences - specifica il tuo database]
+* **State Management:** [Riverpod](https://riverpod.dev/it/)
+* **Database:** [Postgres]
 * **Altre Librerie (Packages):** * `[nome_pacchetto_1]`: per [funzionalità]
     * `[nome_pacchetto_2]`: per [funzionalità]
 
@@ -83,23 +83,10 @@ lib/
  ┣ utils/        # Costanti e temi
  ┗ main.dart     # Entry point
 ```
-🤝 Contribuire
-I contributi sono benvenuti!
-
-Fai un Fork del progetto
-
-Crea un branch (git checkout -b feature/NuovaFeature)
-
-Fai un commit (git commit -m 'Aggiunta feature')
-
-Fai il push (git push origin feature/NuovaFeature)
-
-Apri una Pull Request
 
 ## 📝 Licenza
 Distribuito sotto la licenza MIT. Vedi il file LICENSE per i dettagli.
 
 ## 👨‍💻 Autore
-Flavio Montesi
-
-GitHub: @Montesi-Flavio
+# Flavio Montesi
+- GitHub: @Montesi-Flavio
