@@ -25,7 +25,7 @@ L'obiettivo del progetto è fornire un'interfaccia utente pulita, intuitiva e re
 
 * **Gestione dei Check-up:** Aggiungi, modifica ed elimina i tuoi controlli periodici.
 * **Gestione dei Clienti:** Crea, modifica ed elimina le società, unità locali, reparti, oggetti, titoli, provvedimenti.
-* TODO: **Gestione dei dipendenti:** Aggiunta, modifica, eliminazione dei dipendenti di una società per garantire la persistenza e il rinnovo dei documenti importanti che ogni dipendente deve avere.
+* `TODO:` **Gestione dei dipendenti:** Aggiunta, modifica, eliminazione dei dipendenti di una società per garantire la persistenza e il rinnovo dei documenti importanti che ogni dipendente deve avere.
 * **Creazione PDF:** Creazione di un report per azienda con tutti i dati dei reparti interessati.
 * **Invio mail:** Invio automatico di mail per le scadenze degli interventi.
 * **Notifiche e Promemoria:** Ricevi avvisi in prossimità delle scadenze.
