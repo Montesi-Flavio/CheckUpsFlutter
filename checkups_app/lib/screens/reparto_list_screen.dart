@@ -12,7 +12,11 @@ class RepartoListScreen extends StatefulWidget {
   final Societa societa;
   final UnitaLocale unitaLocale;
 
-  const RepartoListScreen({super.key, required this.societa, required this.unitaLocale});
+  const RepartoListScreen({
+    super.key,
+    required this.societa,
+    required this.unitaLocale,
+  });
 
   @override
   State<RepartoListScreen> createState() => _RepartoListScreenState();
@@ -45,12 +49,15 @@ class _RepartoListScreenState extends State<RepartoListScreen> {
       onAdd: () async {
         final result = await showDialog<Reparto>(
           context: context,
-          builder: (_) => RepartoEditDialog(idUnitaLocale: widget.unitaLocale.id),
+          builder: (_) =>
+              RepartoEditDialog(idUnitaLocale: widget.unitaLocale.id),
         );
         if (result != null && mounted) {
           final repo = context.read<DatabaseRepository>();
           final currentList = await repo.getRepartoList();
-          final maxId = currentList.isEmpty ? 0 : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+          final maxId = currentList.isEmpty
+              ? 0
+              : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
 
           final newReparto = Reparto(
             id: maxId + 1,
@@ -79,31 +86,51 @@ class _RepartoListScreenState extends State<RepartoListScreen> {
 
           final list = snapshot.data ?? [];
           // Filter by UnitaLocale
-          final filteredList = list.where((r) => r.idUnitaLocale == widget.unitaLocale.id).toList();
+          final filteredList = list
+              .where((r) => r.idUnitaLocale == widget.unitaLocale.id)
+              .toList();
 
           return Column(
             children: [
               // Header Row
               Container(
                 color: Colors.grey[200],
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: const Row(
                   children: [
                     SizedBox(
                       width: 40,
-                      child: Text('N°', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'N°',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Expanded(
-                      child: Text('Nome', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'Nome',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Expanded(
-                      child: Text('Revisione', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'Revisione',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Expanded(
-                      child: Text('Data', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'Data',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Expanded(
-                      child: Text('Descrizione', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'Descrizione',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
@@ -127,19 +154,33 @@ class _RepartoListScreenState extends State<RepartoListScreen> {
                           items: [
                             PopupMenuItem(
                               enabled: false,
-                              child: Text(reparto.nome, style: const TextStyle(fontWeight: FontWeight.bold)),
+                              child: Text(
+                                reparto.nome,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                            const PopupMenuItem(value: 'edit', child: Text('Modifica')),
-                            const PopupMenuItem(value: 'delete', child: Text('Elimina')),
+                            const PopupMenuItem(
+                              value: 'edit',
+                              child: Text('Modifica'),
+                            ),
+                            const PopupMenuItem(
+                              value: 'delete',
+                              child: Text('Elimina'),
+                            ),
                           ],
                         ).then((value) async {
                           if (value == 'edit') {
                             final result = await showDialog<Reparto>(
                               context: context,
-                              builder: (_) => RepartoEditDialog(reparto: reparto),
+                              builder: (_) =>
+                                  RepartoEditDialog(reparto: reparto),
                             );
                             if (result != null && mounted) {
-                              await context.read<DatabaseRepository>().updateReparto(result);
+                              await context
+                                  .read<DatabaseRepository>()
+                                  .updateReparto(result);
                               _refresh();
                             }
                           } else if (value == 'delete') {
@@ -147,15 +188,25 @@ class _RepartoListScreenState extends State<RepartoListScreen> {
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 title: const Text('Conferma Eliminazione'),
-                                content: Text('Sei sicuro di voler eliminare il reparto "${reparto.nome}"?'),
+                                content: Text(
+                                  'Sei sicuro di voler eliminare il reparto "${reparto.nome}"?',
+                                ),
                                 actions: [
-                                  TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Annulla')),
-                                  TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Elimina')),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, false),
+                                    child: const Text('Annulla'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, true),
+                                    child: const Text('Elimina'),
+                                  ),
                                 ],
                               ),
                             );
                             if (confirm == true && mounted) {
-                              await context.read<DatabaseRepository>().deleteRepartoRecursive(reparto.id);
+                              await context
+                                  .read<DatabaseRepository>()
+                                  .deleteRepartoRecursive(reparto.id);
                               _refresh();
                             }
                           }
@@ -166,19 +217,30 @@ class _RepartoListScreenState extends State<RepartoListScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => TitoloListScreen(societa: widget.societa, unitaLocale: widget.unitaLocale, reparto: reparto),
+                              builder: (_) => TitoloListScreen(
+                                societa: widget.societa,
+                                unitaLocale: widget.unitaLocale,
+                                reparto: reparto,
+                              ),
                             ),
                           );
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           child: Row(
                             children: [
                               SizedBox(width: 40, child: Text('${reparto.id}')),
                               Expanded(child: Text(reparto.nome)),
                               Expanded(child: Text(reparto.revisione)),
-                              const Expanded(child: Text('')), // Data placeholder
-                              const Expanded(child: Text('')), // Descrizione placeholder
+                              const Expanded(
+                                child: Text(''),
+                              ), // Data placeholder
+                              const Expanded(
+                                child: Text(''),
+                              ), // Descrizione placeholder
                             ],
                           ),
                         ),

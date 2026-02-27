@@ -23,11 +23,19 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
   void initState() {
     super.initState();
     _nomeController = TextEditingController(text: widget.reparto?.nome ?? '');
-    _revisioneController = TextEditingController(text: widget.reparto?.revisione ?? '');
-    _descrizioneController = TextEditingController(text: widget.reparto?.descrizione ?? '');
+    _revisioneController = TextEditingController(
+      text: widget.reparto?.revisione ?? '',
+    );
+    _descrizioneController = TextEditingController(
+      text: widget.reparto?.descrizione ?? '',
+    );
     _priorita = widget.reparto?.priorita ?? 0;
     _selectedDate = widget.reparto?.data;
-    _dataController = TextEditingController(text: _selectedDate != null ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}' : '');
+    _dataController = TextEditingController(
+      text: _selectedDate != null
+          ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
+          : '',
+    );
   }
 
   @override
@@ -59,7 +67,9 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       elevation: 4,
-      backgroundColor: const Color(0xFFF5F5F5), // Light grey background like image
+      backgroundColor: const Color(
+        0xFFF5F5F5,
+      ), // Light grey background like image
       child: Container(
         width: 500, // Fixed width to match popup style
         padding: const EdgeInsets.all(24),
@@ -70,7 +80,9 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
             // Title
             Text(
               widget.reparto != null ? 'Modifica Reparto' : 'Nuovo Reparto',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.black87),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(color: Colors.black87),
             ),
             const SizedBox(height: 24),
 
@@ -79,7 +91,10 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
               children: [
                 const SizedBox(
                   width: 80,
-                  child: Text('N°', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  child: Text(
+                    'N°',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
                 ),
                 Container(
                   width: 80, // Small width for number
@@ -95,16 +110,30 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(left: 8),
-                          child: Text('$_priorita', style: const TextStyle(fontSize: 14)),
+                          child: Text(
+                            '$_priorita',
+                            style: const TextStyle(fontSize: 14),
+                          ),
                         ),
                       ),
                       Column(
                         children: [
                           Expanded(
-                            child: InkWell(onTap: () => setState(() => _priorita++), child: const Icon(Icons.arrow_drop_up, size: 16)),
+                            child: InkWell(
+                              onTap: () => setState(() => _priorita++),
+                              child: const Icon(Icons.arrow_drop_up, size: 16),
+                            ),
                           ),
                           Expanded(
-                            child: InkWell(onTap: () => setState(() => _priorita > 0 ? _priorita-- : 0), child: const Icon(Icons.arrow_drop_down, size: 16)),
+                            child: InkWell(
+                              onTap: () => setState(
+                                () => _priorita > 0 ? _priorita-- : 0,
+                              ),
+                              child: const Icon(
+                                Icons.arrow_drop_down,
+                                size: 16,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -128,7 +157,10 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
               children: [
                 const SizedBox(
                   width: 80,
-                  child: Text('Data*', style: TextStyle(fontWeight: FontWeight.w500)),
+                  child: Text(
+                    'Data*',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
                 ),
                 Expanded(
                   child: Container(
@@ -143,7 +175,10 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Text(_dataController.text, style: const TextStyle(fontSize: 14)),
+                            child: Text(
+                              _dataController.text,
+                              style: const TextStyle(fontSize: 14),
+                            ),
                           ),
                         ),
                         InkWell(
@@ -152,10 +187,16 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
                             width: 32,
                             height: 32,
                             decoration: BoxDecoration(
-                              border: Border(left: BorderSide(color: Colors.grey.shade400)),
+                              border: Border(
+                                left: BorderSide(color: Colors.grey.shade400),
+                              ),
                               color: Colors.grey.shade200,
                             ),
-                            child: const Icon(Icons.calendar_today, size: 16, color: Colors.black54),
+                            child: const Icon(
+                              Icons.calendar_today,
+                              size: 16,
+                              color: Colors.black54,
+                            ),
                           ),
                         ),
                       ],
@@ -174,7 +215,10 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
                   width: 80,
                   child: Padding(
                     padding: EdgeInsets.only(top: 8.0),
-                    child: Text('Descrizione', style: TextStyle(fontWeight: FontWeight.w500)),
+                    child: Text(
+                      'Descrizione',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -183,12 +227,18 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(12), // Matching the image's rounded look for textarea
+                      borderRadius: BorderRadius.circular(
+                        12,
+                      ), // Matching the image's rounded look for textarea
                     ),
                     child: TextField(
                       controller: _descrizioneController,
                       maxLines: null,
-                      decoration: const InputDecoration(border: InputBorder.none, contentPadding: EdgeInsets.all(8), isDense: true),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.all(8),
+                        isDense: true,
+                      ),
                     ),
                   ),
                 ),
@@ -206,7 +256,9 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
                     backgroundColor: Colors.grey.shade200,
                     foregroundColor: Colors.black87,
                     side: BorderSide(color: Colors.grey.shade400),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                   ),
                   child: const Text('Annulla'),
                 ),
@@ -215,7 +267,10 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
                   onPressed: () {
                     final newReparto = Reparto(
                       id: widget.reparto?.id ?? -1,
-                      idUnitaLocale: widget.reparto?.idUnitaLocale ?? widget.idUnitaLocale ?? 0,
+                      idUnitaLocale:
+                          widget.reparto?.idUnitaLocale ??
+                          widget.idUnitaLocale ??
+                          0,
                       priorita: _priorita,
                       nome: _nomeController.text,
                       descrizione: _descrizioneController.text,
@@ -229,7 +284,9 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
                     foregroundColor: Colors.black87,
                     elevation: 1,
                     side: BorderSide(color: Colors.grey.shade400),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                   ),
                   child: const Text('Applica'),
                 ),
@@ -246,7 +303,10 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
       children: [
         SizedBox(
           width: 80,
-          child: Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+          child: Text(
+            label,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
         ),
         Expanded(
           child: SizedBox(
@@ -256,7 +316,10 @@ class _RepartoEditDialogState extends State<RepartoEditDialog> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 0,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(4),
                   borderSide: BorderSide(color: Colors.grey.shade400),

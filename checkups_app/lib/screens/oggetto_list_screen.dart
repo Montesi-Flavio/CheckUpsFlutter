@@ -19,7 +19,13 @@ class OggettoListScreen extends StatefulWidget {
   final Reparto reparto;
   final Titolo titolo;
 
-  const OggettoListScreen({super.key, required this.societa, required this.unitaLocale, required this.reparto, required this.titolo});
+  const OggettoListScreen({
+    super.key,
+    required this.societa,
+    required this.unitaLocale,
+    required this.reparto,
+    required this.titolo,
+  });
 
   @override
   State<OggettoListScreen> createState() => _OggettoListScreenState();
@@ -57,9 +63,16 @@ class _OggettoListScreenState extends State<OggettoListScreen> {
         if (result != null && mounted) {
           final repo = context.read<DatabaseRepository>();
           final currentList = await repo.getOggettoList();
-          final maxId = currentList.isEmpty ? 0 : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+          final maxId = currentList.isEmpty
+              ? 0
+              : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
 
-          final newOggetto = Oggetto(id: maxId + 1, idTitolo: result.idTitolo, priorita: result.priorita, nome: result.nome);
+          final newOggetto = Oggetto(
+            id: maxId + 1,
+            idTitolo: result.idTitolo,
+            priorita: result.priorita,
+            nome: result.nome,
+          );
 
           await repo.insertOggetto(newOggetto);
           _refresh();
@@ -77,29 +90,58 @@ class _OggettoListScreenState extends State<OggettoListScreen> {
             title: 'Importa Oggetti',
             items: candidates,
             columns: [
-              ImportColumn(title: 'Società', getValue: (item) => item.societaNome),
-              ImportColumn(title: 'Unità Locale', getValue: (item) => item.unitaLocaleNome),
-              ImportColumn(title: 'Reparto', getValue: (item) => item.repartoNome),
-              ImportColumn(title: 'Titolo', getValue: (item) => item.titoloDescrizione),
-              ImportColumn(title: 'Oggetto', getValue: (item) => item.oggetto.nome, flex: 2),
+              ImportColumn(
+                title: 'Società',
+                getValue: (item) => item.societaNome,
+              ),
+              ImportColumn(
+                title: 'Unità Locale',
+                getValue: (item) => item.unitaLocaleNome,
+              ),
+              ImportColumn(
+                title: 'Reparto',
+                getValue: (item) => item.repartoNome,
+              ),
+              ImportColumn(
+                title: 'Titolo',
+                getValue: (item) => item.titoloDescrizione,
+              ),
+              ImportColumn(
+                title: 'Oggetto',
+                getValue: (item) => item.oggetto.nome,
+                flex: 2,
+              ),
             ],
           ),
         );
 
         if (results != null && results.isNotEmpty && mounted) {
           final currentList = await repo.getOggettoList();
-          int maxId = currentList.isEmpty ? 0 : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+          int maxId = currentList.isEmpty
+              ? 0
+              : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
 
           final maxProvIdResult = await repo.getProvvedimentoList();
-          int nextProvId = maxProvIdResult.isEmpty ? 0 : maxProvIdResult.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+          int nextProvId = maxProvIdResult.isEmpty
+              ? 0
+              : maxProvIdResult
+                    .map((e) => e.id)
+                    .reduce((a, b) => a > b ? a : b);
 
           for (final result in results) {
             maxId++;
-            final newOggetto = Oggetto(id: maxId, idTitolo: widget.titolo.id, priorita: result.oggetto.priorita, nome: result.oggetto.nome);
+            final newOggetto = Oggetto(
+              id: maxId,
+              idTitolo: widget.titolo.id,
+              priorita: result.oggetto.priorita,
+              nome: result.oggetto.nome,
+            );
             await repo.insertOggetto(newOggetto);
 
             // Recursive Import: Provvedimenti
-            final provvedimenti = await repo.getProvvedimentiByOggettoId(result.oggetto.id);
+            final provvedimenti = await repo.getProvvedimentiByOggettoId(
+              result.oggetto.id,
+            );
             if (provvedimenti.isNotEmpty) {
               for (final prov in provvedimenti) {
                 nextProvId++;
@@ -122,7 +164,13 @@ class _OggettoListScreenState extends State<OggettoListScreen> {
 
           _refresh();
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${results.length} oggetti importati con successo')));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  '${results.length} oggetti importati con successo',
+                ),
+              ),
+            );
           }
         }
       },
@@ -140,21 +188,32 @@ class _OggettoListScreenState extends State<OggettoListScreen> {
           final list = snapshot.data ?? [];
 
           // Filter by Titolo
-          final filteredList = list.where((o) => o.idTitolo == widget.titolo.id).toList();
+          final filteredList = list
+              .where((o) => o.idTitolo == widget.titolo.id)
+              .toList();
 
           return Column(
             children: [
               Container(
                 color: Colors.grey[200],
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: const Row(
                   children: [
                     SizedBox(
                       width: 40,
-                      child: Text('N°', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'N°',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Expanded(
-                      child: Text('Nome', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'Nome',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
@@ -178,19 +237,33 @@ class _OggettoListScreenState extends State<OggettoListScreen> {
                           items: [
                             PopupMenuItem(
                               enabled: false,
-                              child: Text(oggetto.nome, style: const TextStyle(fontWeight: FontWeight.bold)),
+                              child: Text(
+                                oggetto.nome,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                            const PopupMenuItem(value: 'edit', child: Text('Modifica')),
-                            const PopupMenuItem(value: 'delete', child: Text('Elimina')),
+                            const PopupMenuItem(
+                              value: 'edit',
+                              child: Text('Modifica'),
+                            ),
+                            const PopupMenuItem(
+                              value: 'delete',
+                              child: Text('Elimina'),
+                            ),
                           ],
                         ).then((value) async {
                           if (value == 'edit') {
                             final result = await showDialog<Oggetto>(
                               context: context,
-                              builder: (_) => OggettoEditDialog(oggetto: oggetto),
+                              builder: (_) =>
+                                  OggettoEditDialog(oggetto: oggetto),
                             );
                             if (result != null && mounted) {
-                              await context.read<DatabaseRepository>().updateOggetto(result);
+                              await context
+                                  .read<DatabaseRepository>()
+                                  .updateOggetto(result);
                               _refresh();
                             }
                           } else if (value == 'delete') {
@@ -198,15 +271,25 @@ class _OggettoListScreenState extends State<OggettoListScreen> {
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 title: const Text('Conferma Eliminazione'),
-                                content: Text('Sei sicuro di voler eliminare l\'oggetto "${oggetto.nome}"?'),
+                                content: Text(
+                                  'Sei sicuro di voler eliminare l\'oggetto "${oggetto.nome}"?',
+                                ),
                                 actions: [
-                                  TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Annulla')),
-                                  TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Elimina')),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, false),
+                                    child: const Text('Annulla'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, true),
+                                    child: const Text('Elimina'),
+                                  ),
                                 ],
                               ),
                             );
                             if (confirm == true && mounted) {
-                              await context.read<DatabaseRepository>().deleteOggettoRecursive(oggetto.id);
+                              await context
+                                  .read<DatabaseRepository>()
+                                  .deleteOggettoRecursive(oggetto.id);
                               _refresh();
                             }
                           }
@@ -228,7 +311,10 @@ class _OggettoListScreenState extends State<OggettoListScreen> {
                           );
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           child: Row(
                             children: [
                               SizedBox(width: 40, child: Text('${index + 1}')),

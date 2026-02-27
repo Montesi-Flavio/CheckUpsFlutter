@@ -29,7 +29,8 @@ class ProvvedimentoListScreen extends StatefulWidget {
   });
 
   @override
-  State<ProvvedimentoListScreen> createState() => _ProvvedimentoListScreenState();
+  State<ProvvedimentoListScreen> createState() =>
+      _ProvvedimentoListScreenState();
 }
 
 class _ProvvedimentoListScreenState extends State<ProvvedimentoListScreen> {
@@ -65,7 +66,9 @@ class _ProvvedimentoListScreenState extends State<ProvvedimentoListScreen> {
         if (result != null && mounted) {
           final repo = context.read<DatabaseRepository>();
           final currentList = await repo.getProvvedimentoList();
-          final maxId = currentList.isEmpty ? 0 : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+          final maxId = currentList.isEmpty
+              ? 0
+              : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
 
           final newProvvedimento = Provvedimento(
             id: maxId + 1,
@@ -96,20 +99,44 @@ class _ProvvedimentoListScreenState extends State<ProvvedimentoListScreen> {
             title: 'Importa Provvedimenti',
             items: candidates,
             columns: [
-              ImportColumn(title: 'Società', getValue: (item) => item.societaNome),
-              ImportColumn(title: 'Unità Locale', getValue: (item) => item.unitaLocaleNome),
-              ImportColumn(title: 'Reparto', getValue: (item) => item.repartoNome),
-              ImportColumn(title: 'Titolo', getValue: (item) => item.titoloDescrizione),
-              ImportColumn(title: 'Oggetto', getValue: (item) => item.oggettoNome),
-              ImportColumn(title: 'Rischio', getValue: (item) => item.provvedimento.rischio),
-              ImportColumn(title: 'Misure', getValue: (item) => item.provvedimento.nome, flex: 2),
+              ImportColumn(
+                title: 'Società',
+                getValue: (item) => item.societaNome,
+              ),
+              ImportColumn(
+                title: 'Unità Locale',
+                getValue: (item) => item.unitaLocaleNome,
+              ),
+              ImportColumn(
+                title: 'Reparto',
+                getValue: (item) => item.repartoNome,
+              ),
+              ImportColumn(
+                title: 'Titolo',
+                getValue: (item) => item.titoloDescrizione,
+              ),
+              ImportColumn(
+                title: 'Oggetto',
+                getValue: (item) => item.oggettoNome,
+              ),
+              ImportColumn(
+                title: 'Rischio',
+                getValue: (item) => item.provvedimento.rischio,
+              ),
+              ImportColumn(
+                title: 'Misure',
+                getValue: (item) => item.provvedimento.nome,
+                flex: 2,
+              ),
             ],
           ),
         );
 
         if (results != null && results.isNotEmpty && mounted) {
           final currentList = await repo.getProvvedimentoList();
-          int maxId = currentList.isEmpty ? 0 : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+          int maxId = currentList.isEmpty
+              ? 0
+              : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
 
           for (final result in results) {
             maxId++;
@@ -130,7 +157,13 @@ class _ProvvedimentoListScreenState extends State<ProvvedimentoListScreen> {
 
           _refresh();
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${results.length} provvedimenti importati con successo')));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  '${results.length} provvedimenti importati con successo',
+                ),
+              ),
+            );
           }
         }
       },
@@ -148,38 +181,61 @@ class _ProvvedimentoListScreenState extends State<ProvvedimentoListScreen> {
           final list = snapshot.data ?? [];
 
           // Filter by Oggetto
-          final filteredList = list.where((p) => p.idOggetto == widget.oggetto.id).toList();
+          final filteredList = list
+              .where((p) => p.idOggetto == widget.oggetto.id)
+              .toList();
 
           return Column(
             children: [
               Container(
                 color: Colors.grey[200],
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: const Row(
                   children: [
                     SizedBox(
                       width: 40,
-                      child: Text('N°', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'N°',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Expanded(
                       flex: 1,
-                      child: Text('Rischio', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'Rischio',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Expanded(
                       flex: 3,
-                      child: Text('Misure di prevenzione e protezione', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'Misure di prevenzione e protezione',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Expanded(
                       flex: 1,
-                      child: Text('Soggetti Esposti', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'Soggetti Esposti',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Expanded(
                       flex: 1,
-                      child: Text('Stima', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'Stima',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Expanded(
                       flex: 1,
-                      child: Text('Data...', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'Data...',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
@@ -203,19 +259,33 @@ class _ProvvedimentoListScreenState extends State<ProvvedimentoListScreen> {
                           items: [
                             PopupMenuItem(
                               enabled: false,
-                              child: Text(prov.rischio, style: const TextStyle(fontWeight: FontWeight.bold)),
+                              child: Text(
+                                prov.rischio,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                            const PopupMenuItem(value: 'edit', child: Text('Modifica')),
-                            const PopupMenuItem(value: 'delete', child: Text('Elimina')),
+                            const PopupMenuItem(
+                              value: 'edit',
+                              child: Text('Modifica'),
+                            ),
+                            const PopupMenuItem(
+                              value: 'delete',
+                              child: Text('Elimina'),
+                            ),
                           ],
                         ).then((value) async {
                           if (value == 'edit') {
                             final result = await showDialog<Provvedimento>(
                               context: context,
-                              builder: (_) => ProvvedimentoEditDialog(provvedimento: prov),
+                              builder: (_) =>
+                                  ProvvedimentoEditDialog(provvedimento: prov),
                             );
                             if (result != null && mounted) {
-                              await context.read<DatabaseRepository>().updateProvvedimento(result);
+                              await context
+                                  .read<DatabaseRepository>()
+                                  .updateProvvedimento(result);
                               _refresh();
                             }
                           } else if (value == 'delete') {
@@ -223,15 +293,29 @@ class _ProvvedimentoListScreenState extends State<ProvvedimentoListScreen> {
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 title: const Text('Conferma Eliminazione'),
-                                content: Text('Sei sicuro di voler eliminare il provvedimento?'),
+                                content: Text(
+                                  'Sei sicuro di voler eliminare il provvedimento?',
+                                ),
                                 actions: [
-                                  TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Annulla')),
-                                  TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Elimina')),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, false),
+                                    child: const Text('Annulla'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, true),
+                                    child: const Text('Elimina'),
+                                  ),
                                 ],
                               ),
                             );
                             if (confirm == true && mounted) {
-                              await context.read<DatabaseRepository>().deleteRecord('provvedimenti', 'id_provvedimento', prov.id);
+                              await context
+                                  .read<DatabaseRepository>()
+                                  .deleteRecord(
+                                    'provvedimenti',
+                                    'id_provvedimento',
+                                    prov.id,
+                                  );
                               _refresh();
                             }
                           }
@@ -242,16 +326,28 @@ class _ProvvedimentoListScreenState extends State<ProvvedimentoListScreen> {
                           // Edit details
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(width: 40, child: Text('${index + 1}')),
                               Expanded(flex: 1, child: Text(prov.rischio)),
                               Expanded(flex: 3, child: Text(prov.nome)),
-                              const Expanded(flex: 1, child: Text('')), // Soggetti placeholder
-                              const Expanded(flex: 1, child: Text('0')), // Stima placeholder
-                              const Expanded(flex: 1, child: Text('')), // Data placeholder
+                              const Expanded(
+                                flex: 1,
+                                child: Text(''),
+                              ), // Soggetti placeholder
+                              const Expanded(
+                                flex: 1,
+                                child: Text('0'),
+                              ), // Stima placeholder
+                              const Expanded(
+                                flex: 1,
+                                child: Text(''),
+                              ), // Data placeholder
                             ],
                           ),
                         ),

@@ -5,7 +5,12 @@ class ImportDialog<T> extends StatefulWidget {
   final List<T> items;
   final List<ImportColumn<T>> columns;
 
-  const ImportDialog({super.key, required this.title, required this.items, required this.columns});
+  const ImportDialog({
+    super.key,
+    required this.title,
+    required this.items,
+    required this.columns,
+  });
 
   @override
   State<ImportDialog<T>> createState() => _ImportDialogState<T>();
@@ -30,7 +35,9 @@ class _ImportDialogState<T> extends State<ImportDialog<T>> {
           final filterText = entry.value.toLowerCase();
           if (filterText.isEmpty) continue;
 
-          final cellValue = widget.columns[columnIndex].getValue(item).toLowerCase();
+          final cellValue = widget.columns[columnIndex]
+              .getValue(item)
+              .toLowerCase();
           if (!cellValue.contains(filterText)) {
             return false;
           }
@@ -60,7 +67,9 @@ class _ImportDialogState<T> extends State<ImportDialog<T>> {
     });
   }
 
-  bool get _areAllFilteredSelected => _filteredItems.isNotEmpty && _filteredItems.every((item) => _selectedItems.contains(item));
+  bool get _areAllFilteredSelected =>
+      _filteredItems.isNotEmpty &&
+      _filteredItems.every((item) => _selectedItems.contains(item));
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +85,18 @@ class _ImportDialogState<T> extends State<ImportDialog<T>> {
             // Header
             Row(
               children: [
-                Text(widget.title, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                Text(
+                  widget.title,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const Spacer(),
-                IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -86,12 +104,20 @@ class _ImportDialogState<T> extends State<ImportDialog<T>> {
             // Table Header with Filters
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(8),
+              ),
               child: Row(
                 children: [
                   SizedBox(
                     width: 40,
-                    child: Checkbox(value: _areAllFilteredSelected, onChanged: _filteredItems.isEmpty ? null : _toggleSelectAll),
+                    child: Checkbox(
+                      value: _areAllFilteredSelected,
+                      onChanged: _filteredItems.isEmpty
+                          ? null
+                          : _toggleSelectAll,
+                    ),
                   ),
                   for (int i = 0; i < widget.columns.length; i++)
                     Expanded(
@@ -99,7 +125,10 @@ class _ImportDialogState<T> extends State<ImportDialog<T>> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(widget.columns[i].title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(
+                            widget.columns[i].title,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           const SizedBox(height: 8),
                           if (widget.columns[i].filterable)
                             Container(
@@ -107,13 +136,19 @@ class _ImportDialogState<T> extends State<ImportDialog<T>> {
                               padding: const EdgeInsets.only(right: 8),
                               child: TextField(
                                 decoration: InputDecoration(
-                                  hintText: 'Filtra per ${widget.columns[i].title.toLowerCase()}',
+                                  hintText:
+                                      'Filtra per ${widget.columns[i].title.toLowerCase()}',
                                   filled: true,
                                   fillColor: Colors.white,
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 0,
+                                  ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(4),
-                                    borderSide: BorderSide(color: Colors.grey[300]!),
+                                    borderSide: BorderSide(
+                                      color: Colors.grey[300]!,
+                                    ),
                                   ),
                                   suffixIcon: _filters[i]?.isNotEmpty == true
                                       ? InkWell(
@@ -121,7 +156,10 @@ class _ImportDialogState<T> extends State<ImportDialog<T>> {
                                             _filters[i] = '';
                                             _applyFilters();
                                           },
-                                          child: const Icon(Icons.close, size: 16),
+                                          child: const Icon(
+                                            Icons.close,
+                                            size: 16,
+                                          ),
                                         )
                                       : null,
                                 ),
@@ -153,20 +191,34 @@ class _ImportDialogState<T> extends State<ImportDialog<T>> {
                         return InkWell(
                           onTap: () => _toggleSelection(item),
                           child: Container(
-                            color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.1) : null,
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            color: isSelected
+                                ? Theme.of(
+                                    context,
+                                  ).primaryColor.withOpacity(0.1)
+                                : null,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
                             child: Row(
                               children: [
                                 SizedBox(
                                   width: 40,
-                                  child: Checkbox(value: isSelected, onChanged: (_) => _toggleSelection(item)),
+                                  child: Checkbox(
+                                    value: isSelected,
+                                    onChanged: (_) => _toggleSelection(item),
+                                  ),
                                 ),
                                 for (int i = 0; i < widget.columns.length; i++)
                                   Expanded(
                                     flex: widget.columns[i].flex,
                                     child: Text(
                                       widget.columns[i].getValue(item),
-                                      style: TextStyle(fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
+                                      style: TextStyle(
+                                        fontWeight: isSelected
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                      ),
                                     ),
                                   ),
                               ],
@@ -185,14 +237,25 @@ class _ImportDialogState<T> extends State<ImportDialog<T>> {
                 if (_selectedItems.isNotEmpty)
                   Text(
                     '${_selectedItems.length} selezionati',
-                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
                   ),
                 const SizedBox(width: 16),
-                OutlinedButton(onPressed: () => Navigator.pop(context), child: const Text('Chiudi')),
+                OutlinedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Chiudi'),
+                ),
                 const SizedBox(width: 16),
                 ElevatedButton(
-                  onPressed: _selectedItems.isNotEmpty ? () => Navigator.pop(context, _selectedItems.toList()) : null,
-                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor, foregroundColor: Colors.white),
+                  onPressed: _selectedItems.isNotEmpty
+                      ? () => Navigator.pop(context, _selectedItems.toList())
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    foregroundColor: Colors.white,
+                  ),
                   child: const Text('Applica'),
                 ),
               ],
@@ -210,5 +273,10 @@ class ImportColumn<T> {
   final bool filterable;
   final String Function(T) getValue;
 
-  const ImportColumn({required this.title, required this.getValue, this.flex = 1, this.filterable = true});
+  const ImportColumn({
+    required this.title,
+    required this.getValue,
+    this.flex = 1,
+    this.filterable = true,
+  });
 }

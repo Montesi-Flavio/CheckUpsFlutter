@@ -45,10 +45,21 @@ class StandardScreenLayout extends StatelessWidget {
       body: Column(
         children: [
           // 1. Shared Header
-          SharedHeader(isHomeActive: false, onHomePressed: () => Navigator.of(context).popUntil((route) => route.isFirst), isAdminActive: true),
+          SharedHeader(
+            isHomeActive: false,
+            onHomePressed: () =>
+                Navigator.of(context).popUntil((route) => route.isFirst),
+            isAdminActive: true,
+          ),
 
           // 2. Context Header
-          ContextHeader(societa: societa, unitaLocale: unitaLocale, reparto: reparto, titolo: titolo, oggetto: oggetto),
+          ContextHeader(
+            societa: societa,
+            unitaLocale: unitaLocale,
+            reparto: reparto,
+            titolo: titolo,
+            oggetto: oggetto,
+          ),
 
           // 3. Main Content Area
           Expanded(
@@ -59,7 +70,10 @@ class StandardScreenLayout extends StatelessWidget {
                 // Title
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.black87),
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -69,14 +83,38 @@ class StandardScreenLayout extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Row(
                     children: [
-                      if (onBack != null) ...[ModernActionButton(icon: Icons.arrow_back_ios_new, onPressed: onBack!, tooltip: 'Indietro')],
+                      if (onBack != null) ...[
+                        ModernActionButton(
+                          icon: Icons.arrow_back_ios_new,
+                          onPressed: onBack!,
+                          tooltip: 'Indietro',
+                        ),
+                      ],
                       const Spacer(),
                       if (onAdd != null) ...[
-                        ModernActionButton(icon: Icons.add, label: 'Aggiungi', isPrimary: true, onPressed: onAdd!),
+                        ModernActionButton(
+                          icon: Icons.add,
+                          label: 'Aggiungi',
+                          isPrimary: true,
+                          onPressed: onAdd!,
+                        ),
                         const SizedBox(width: 8),
                       ],
-                      if (onImport != null) ...[ModernActionButton(icon: Icons.download, label: 'Importa', onPressed: onImport!), const SizedBox(width: 8)],
-                      if (onNext != null) ...[ModernActionButton(icon: Icons.arrow_forward_ios, onPressed: onNext!, tooltip: 'Avanti')],
+                      if (onImport != null) ...[
+                        ModernActionButton(
+                          icon: Icons.download,
+                          label: 'Importa',
+                          onPressed: onImport!,
+                        ),
+                        const SizedBox(width: 8),
+                      ],
+                      if (onNext != null) ...[
+                        ModernActionButton(
+                          icon: Icons.arrow_forward_ios,
+                          onPressed: onNext!,
+                          tooltip: 'Avanti',
+                        ),
+                      ],
                     ],
                   ),
                 ),

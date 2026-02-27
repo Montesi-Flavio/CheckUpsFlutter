@@ -22,12 +22,32 @@ class Controller {
   // Replicating Java Controller.modificaCampo logic
   // Note: In Flutter, usually we update the object locally and then save.
   // This method seems to assume direct DB partial update.
-  Future<void> modificaCampoStringa(TableData obj, String campo, String? nuovoValore) async {
-    await _repository.updateCampoStringa(obj.tableName, obj.primaryKey, obj.id, campo, nuovoValore);
+  Future<void> modificaCampoStringa(
+    TableData obj,
+    String campo,
+    String? nuovoValore,
+  ) async {
+    await _repository.updateCampoStringa(
+      obj.tableName,
+      obj.primaryKey,
+      obj.id,
+      campo,
+      nuovoValore,
+    );
   }
 
-  Future<void> modificaCampoInt(TableData obj, String campo, int nuovoValore) async {
-    await _repository.updateCampoInt(obj.tableName, obj.primaryKey, obj.id, campo, nuovoValore);
+  Future<void> modificaCampoInt(
+    TableData obj,
+    String campo,
+    int nuovoValore,
+  ) async {
+    await _repository.updateCampoInt(
+      obj.tableName,
+      obj.primaryKey,
+      obj.id,
+      campo,
+      nuovoValore,
+    );
   }
 
   // Replicating Java Controller.inserisciNuovoRecord logic

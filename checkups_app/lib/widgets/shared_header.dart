@@ -24,20 +24,38 @@ class SharedHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
           // Logo
-          Image.asset('assets/LOGOCheckUp.png', height: 64, fit: BoxFit.contain),
+          Image.asset(
+            'assets/LOGOCheckUp.png',
+            height: 64,
+            fit: BoxFit.contain,
+          ),
           const Spacer(),
           // Nav Buttons or Custom Right Content
           if (rightContent != null)
             rightContent!
           else if (showNavButtons) ...[
-            _NavButton(text: 'HOME', isActive: isHomeActive, onPressed: onHomePressed ?? () {}),
+            _NavButton(
+              text: 'HOME',
+              isActive: isHomeActive,
+              onPressed: onHomePressed ?? () {},
+            ),
             const SizedBox(width: 16),
-            _NavButton(text: 'CREA / MODIFICA', isActive: isAdminActive, onPressed: onAdminPressed ?? () {}),
+            _NavButton(
+              text: 'CREA / MODIFICA',
+              isActive: isAdminActive,
+              onPressed: onAdminPressed ?? () {},
+            ),
           ],
         ],
       ),
@@ -50,14 +68,20 @@ class _NavButton extends StatelessWidget {
   final bool isActive;
   final VoidCallback onPressed;
 
-  const _NavButton({required this.text, required this.isActive, required this.onPressed});
+  const _NavButton({
+    required this.text,
+    required this.isActive,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        foregroundColor: isActive ? Theme.of(context).primaryColor : Colors.grey[700],
+        foregroundColor: isActive
+            ? Theme.of(context).primaryColor
+            : Colors.grey[700],
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
       child: Text(

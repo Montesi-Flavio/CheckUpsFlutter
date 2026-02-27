@@ -37,7 +37,8 @@ class ModernActionButton extends StatelessWidget {
       side = null;
     } else {
       // Secondary / Default (Tonal or Outlined look)
-      backgroundColor = Colors.white; // Explicitly white for secondary to match clean look
+      backgroundColor =
+          Colors.white; // Explicitly white for secondary to match clean look
       foregroundColor = colorScheme.onSurface;
       side = BorderSide(color: Colors.grey.withOpacity(0.3));
     }
@@ -48,7 +49,10 @@ class ModernActionButton extends StatelessWidget {
       elevation: isPrimary ? 2 : 1,
       shadowColor: Colors.black.withOpacity(0.1),
       side: side,
-      padding: EdgeInsets.symmetric(horizontal: label != null ? 20 : 12, vertical: 14),
+      padding: EdgeInsets.symmetric(
+        horizontal: label != null ? 20 : 12,
+        vertical: 14,
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       minimumSize: const Size(48, 48),
     );
@@ -59,10 +63,17 @@ class ModernActionButton extends StatelessWidget {
         onPressed: onPressed,
         style: buttonStyle,
         icon: Icon(icon, size: 20),
-        label: Text(label!, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+        label: Text(
+          label!,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
       );
     } else {
-      button = ElevatedButton(onPressed: onPressed, style: buttonStyle, child: Icon(icon, size: 22));
+      button = ElevatedButton(
+        onPressed: onPressed,
+        style: buttonStyle,
+        child: Icon(icon, size: 22),
+      );
     }
 
     if (tooltip != null) {

@@ -30,7 +30,9 @@ class _UnitaLocaleListScreenState extends State<UnitaLocaleListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Unità Locali'),
-        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _refresh)],
+        actions: [
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _refresh),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -52,7 +54,10 @@ class _UnitaLocaleListScreenState extends State<UnitaLocaleListScreen> {
                   const Icon(Icons.error_outline, size: 48, color: Colors.red),
                   const SizedBox(height: 16),
                   Text('Errore: ${snapshot.error}'),
-                  ElevatedButton(onPressed: _refresh, child: const Text('Riprova')),
+                  ElevatedButton(
+                    onPressed: _refresh,
+                    child: const Text('Riprova'),
+                  ),
                 ],
               ),
             );
@@ -71,7 +76,9 @@ class _UnitaLocaleListScreenState extends State<UnitaLocaleListScreen> {
               return ListTile(
                 leading: CircleAvatar(child: Text(unita.nome[0].toUpperCase())),
                 title: Text(unita.nome),
-                subtitle: Text('${unita.indirizzo}, ${unita.localita} (${unita.provincia})'),
+                subtitle: Text(
+                  '${unita.indirizzo}, ${unita.localita} (${unita.provincia})',
+                ),
                 onTap: () {
                   // TODO: Details / Edit
                 },

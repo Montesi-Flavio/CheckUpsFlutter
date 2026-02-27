@@ -24,6 +24,7 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
   final _searchController = TextEditingController();
   final _nomeController = TextEditingController();
   final _telefonoController = TextEditingController();
+  final _emailController = TextEditingController();
   final _localitaController = TextEditingController();
   final _provinciaController = TextEditingController();
   final _indirizzoController = TextEditingController();
@@ -47,6 +48,7 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
           _provinciaController.text.isNotEmpty ||
           _partitaIvaController.text.isNotEmpty ||
           _telefonoController.text.isNotEmpty ||
+          _emailController.text.isNotEmpty ||
           _indirizzoController.text.isNotEmpty ||
           _descrizioneController.text.isNotEmpty ||
           _codiceFiscaleController.text.isNotEmpty ||
@@ -59,19 +61,27 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
           _localitaController.text != _selectedSocieta!.localita ||
           _provinciaController.text != _selectedSocieta!.provincia ||
           _telefonoController.text != _selectedSocieta!.telefono ||
+          _emailController.text != (_selectedSocieta!.email ?? '') ||
           _indirizzoController.text != _selectedSocieta!.indirizzo ||
           _partitaIvaController.text != (_selectedSocieta!.partitaIva ?? '') ||
-          _descrizioneController.text != (_selectedSocieta!.descrizione ?? '') ||
-          _codiceFiscaleController.text != (_selectedSocieta!.codiceFiscale ?? '') ||
-          _bancaAppoggioController.text != (_selectedSocieta!.bancaAppoggio ?? '') ||
-          _codiceAtecoController.text != (_selectedSocieta!.codiceAteco ?? '') ||
+          _descrizioneController.text !=
+              (_selectedSocieta!.descrizione ?? '') ||
+          _codiceFiscaleController.text !=
+              (_selectedSocieta!.codiceFiscale ?? '') ||
+          _bancaAppoggioController.text !=
+              (_selectedSocieta!.bancaAppoggio ?? '') ||
+          _codiceAtecoController.text !=
+              (_selectedSocieta!.codiceAteco ?? '') ||
           _logoBytes != _selectedSocieta!.logoBytes;
     }
   }
 
   void _checkFormValid() {
     final isValid =
-        _nomeController.text.isNotEmpty && _localitaController.text.isNotEmpty && _provinciaController.text.isNotEmpty && _partitaIvaController.text.isNotEmpty;
+        _nomeController.text.isNotEmpty &&
+        _localitaController.text.isNotEmpty &&
+        _provinciaController.text.isNotEmpty &&
+        _partitaIvaController.text.isNotEmpty;
     if (_isFormValid != isValid) {
       setState(() => _isFormValid = isValid);
     }
@@ -89,6 +99,7 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
       _provinciaController,
       _partitaIvaController,
       _telefonoController,
+      _emailController,
       _indirizzoController,
       _descrizioneController,
       _codiceFiscaleController,
@@ -131,6 +142,7 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
       _searchController.text = societa.nome;
       _nomeController.text = societa.nome;
       _telefonoController.text = societa.telefono;
+      _emailController.text = societa.email ?? '';
       _localitaController.text = societa.localita;
       _provinciaController.text = societa.provincia;
       _indirizzoController.text = societa.indirizzo;
@@ -156,6 +168,7 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
     _searchController.clear();
     _nomeController.clear();
     _telefonoController.clear();
+    _emailController.clear();
     _localitaController.clear();
     _provinciaController.clear();
     _indirizzoController.clear();
@@ -188,7 +201,11 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Errore durante la selezione dell\'immagine: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Errore durante la selezione dell\'immagine: $e'),
+          ),
+        );
       }
     }
   }
@@ -204,6 +221,7 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
           localita: _localitaController.text,
           provincia: _provinciaController.text,
           telefono: _telefonoController.text,
+          email: _emailController.text,
           descrizione: _descrizioneController.text,
           partitaIva: _partitaIvaController.text,
           codiceFiscale: _codiceFiscaleController.text,
@@ -241,12 +259,16 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
         }
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Salvataggio completato')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Salvataggio completato')),
+          );
         }
         return true;
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Errore durante il salvataggio: $e')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Errore durante il salvataggio: $e')),
+          );
         }
         return false;
       } finally {
@@ -263,9 +285,14 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Conferma eliminazione'),
-        content: Text('Sei sicuro di voler eliminare la società "${_selectedSocieta!.nome}"?'),
+        content: Text(
+          'Sei sicuro di voler eliminare la società "${_selectedSocieta!.nome}"?',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Annulla')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Annulla'),
+          ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
@@ -283,11 +310,15 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
         await _loadData();
         _clearForm();
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Società eliminata')));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Società eliminata')));
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Errore durante l\'eliminazione: $e')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Errore durante l\'eliminazione: $e')),
+          );
         }
       } finally {
         if (mounted) setState(() => _isLoading = false);
@@ -315,13 +346,19 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
               builder: (context, constraints) {
                 return SingleChildScrollView(
                   child: Container(
-                    height: constraints.maxHeight < 900 ? 900 : constraints.maxHeight,
+                    height: constraints.maxHeight < 900
+                        ? 900
+                        : constraints.maxHeight,
                     padding: const EdgeInsets.all(32),
                     child: Card(
                       elevation: 4,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       child: Container(
-                        constraints: const BoxConstraints(maxWidth: double.infinity),
+                        constraints: const BoxConstraints(
+                          maxWidth: double.infinity,
+                        ),
                         padding: const EdgeInsets.all(24),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -329,7 +366,8 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
                             // Title
                             Text(
                               'Società',
-                              style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+                              style: Theme.of(context).textTheme.headlineMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 16),
@@ -342,10 +380,16 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
                                   icon: Icons.save,
                                   label: 'Salva',
                                   isPrimary: true,
-                                  onPressed: (_isFormValid && _isDirty) ? () => _saveSocieta() : null,
+                                  onPressed: (_isFormValid && _isDirty)
+                                      ? () => _saveSocieta()
+                                      : null,
                                 ),
                                 const SizedBox(width: 8),
-                                ModernActionButton(icon: Icons.close, onPressed: _clearForm, tooltip: 'Resetta campi'),
+                                ModernActionButton(
+                                  icon: Icons.close,
+                                  onPressed: _clearForm,
+                                  tooltip: 'Resetta campi',
+                                ),
                                 const SizedBox(width: 8),
                                 ModernActionButton(
                                   icon: Icons.delete_outline,
@@ -367,19 +411,45 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
                                       return DropdownMenu<Societa>(
                                         controller: _searchController,
                                         width: constraints.maxWidth,
-                                        label: const Text('Inserisci il nome della società...'),
+                                        label: const Text(
+                                          'Inserisci il nome della società...',
+                                        ),
                                         enableFilter: true,
                                         menuHeight: 300,
-                                        dropdownMenuEntries: (_societaList.toList()..sort((a, b) => a.nome.toLowerCase().compareTo(b.nome.toLowerCase())))
-                                            .map((s) => DropdownMenuEntry<Societa>(value: s, label: s.nome))
-                                            .toList(),
+                                        dropdownMenuEntries:
+                                            (_societaList.toList()..sort(
+                                                  (a, b) => a.nome
+                                                      .toLowerCase()
+                                                      .compareTo(
+                                                        b.nome.toLowerCase(),
+                                                      ),
+                                                ))
+                                                .map(
+                                                  (s) =>
+                                                      DropdownMenuEntry<
+                                                        Societa
+                                                      >(
+                                                        value: s,
+                                                        label: s.nome,
+                                                      ),
+                                                )
+                                                .toList(),
                                         onSelected: _populateForm,
-                                        inputDecorationTheme: const InputDecorationTheme(
-                                          filled: true,
-                                          fillColor: Colors.white,
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                                          border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(4))),
-                                        ),
+                                        inputDecorationTheme:
+                                            const InputDecorationTheme(
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                  ),
+                                              border: OutlineInputBorder(
+                                                borderSide: BorderSide.none,
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(4),
+                                                ),
+                                              ),
+                                            ),
                                       );
                                     },
                                   ),
@@ -420,7 +490,15 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
 
                                         // Let's implement: If selected & dirty -> Auto Update -> Navigate.
                                       } else {
-                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Seleziona una società per procedere')));
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'Seleziona una società per procedere',
+                                            ),
+                                          ),
+                                        );
                                       }
                                     } else {
                                       // Selected is not null
@@ -438,7 +516,15 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
                                         }
                                       } else {
                                         // Not dirty, just navigate
-                                        Navigator.push(context, MaterialPageRoute(builder: (_) => UnitaLocaleEditScreen(societa: _selectedSocieta)));
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                                UnitaLocaleEditScreen(
+                                                  societa: _selectedSocieta,
+                                                ),
+                                          ),
+                                        );
                                       }
                                     }
                                   },
@@ -458,59 +544,134 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
                                     // Left Column
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
                                         children: [
-                                          _buildField('Ragione Sociale*', _nomeController, fullWidth: true),
+                                          _buildField(
+                                            'Ragione Sociale*',
+                                            _nomeController,
+                                            fullWidth: true,
+                                          ),
                                           const SizedBox(height: 12),
-                                          _buildField('Telefono', _telefonoController, fullWidth: true),
+                                          _buildRow(
+                                            _buildField(
+                                              'Telefono',
+                                              _telefonoController,
+                                            ),
+                                            _buildField(
+                                              'Email',
+                                              _emailController,
+                                            ),
+                                          ),
                                           const SizedBox(height: 12),
-                                          _buildField('Indirizzo', _indirizzoController, fullWidth: true),
+                                          _buildField(
+                                            'Indirizzo',
+                                            _indirizzoController,
+                                            fullWidth: true,
+                                          ),
                                           const SizedBox(height: 12),
-                                          _buildRow(_buildField('Località*', _localitaController), _buildField('Provincia*', _provinciaController)),
+                                          _buildRow(
+                                            _buildField(
+                                              'Località*',
+                                              _localitaController,
+                                            ),
+                                            _buildField(
+                                              'Provincia*',
+                                              _provinciaController,
+                                            ),
+                                          ),
                                           const SizedBox(height: 12),
                                           Align(
                                             alignment: Alignment.centerLeft,
                                             child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                if (_logoBytes != null && _logoBytes!.isNotEmpty) ...[
+                                                if (_logoBytes != null &&
+                                                    _logoBytes!.isNotEmpty) ...[
                                                   Container(
                                                     decoration: BoxDecoration(
-                                                      border: Border.all(color: Colors.grey.shade300),
-                                                      borderRadius: BorderRadius.circular(8),
+                                                      border: Border.all(
+                                                        color: Colors
+                                                            .grey
+                                                            .shade300,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            8,
+                                                          ),
                                                     ),
-                                                    padding: const EdgeInsets.all(4),
+                                                    padding:
+                                                        const EdgeInsets.all(4),
                                                     child: Stack(
-                                                      alignment: Alignment.topRight,
+                                                      alignment:
+                                                          Alignment.topRight,
                                                       children: [
                                                         ClipRRect(
-                                                          borderRadius: BorderRadius.circular(4),
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                4,
+                                                              ),
                                                           child: Image.memory(
                                                             _logoBytes!,
                                                             height: 150,
                                                             width: 200,
                                                             fit: BoxFit.contain,
-                                                            errorBuilder: (context, error, stackTrace) {
-                                                              return Container(
-                                                                height: 150,
-                                                                width: 200,
-                                                                color: Colors.grey.shade200,
-                                                                child: const Icon(Icons.broken_image, size: 48, color: Colors.grey),
-                                                              );
-                                                            },
+                                                            errorBuilder:
+                                                                (
+                                                                  context,
+                                                                  error,
+                                                                  stackTrace,
+                                                                ) {
+                                                                  return Container(
+                                                                    height: 150,
+                                                                    width: 200,
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade200,
+                                                                    child: const Icon(
+                                                                      Icons
+                                                                          .broken_image,
+                                                                      size: 48,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                    ),
+                                                                  );
+                                                                },
                                                           ),
                                                         ),
                                                         InkWell(
-                                                          onTap: () => setState(() => _logoBytes = null),
+                                                          onTap: () => setState(
+                                                            () => _logoBytes =
+                                                                null,
+                                                          ),
                                                           child: Container(
-                                                            margin: const EdgeInsets.all(4),
-                                                            padding: const EdgeInsets.all(4),
+                                                            margin:
+                                                                const EdgeInsets.all(
+                                                                  4,
+                                                                ),
+                                                            padding:
+                                                                const EdgeInsets.all(
+                                                                  4,
+                                                                ),
                                                             decoration: const BoxDecoration(
-                                                              color: Colors.white,
-                                                              shape: BoxShape.circle,
-                                                              boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                                                              color:
+                                                                  Colors.white,
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Colors
+                                                                      .black26,
+                                                                  blurRadius: 4,
+                                                                ),
+                                                              ],
                                                             ),
-                                                            child: const Icon(Icons.close, size: 16, color: Colors.red),
+                                                            child: const Icon(
+                                                              Icons.close,
+                                                              size: 16,
+                                                              color: Colors.red,
+                                                            ),
                                                           ),
                                                         ),
                                                       ],
@@ -522,9 +683,23 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
                                                   height: 48,
                                                   child: ElevatedButton.icon(
                                                     onPressed: _pickImage,
-                                                    icon: const Icon(Icons.image),
-                                                    label: Text(_logoBytes == null ? 'File Immagine' : 'Cambia Immagine'),
-                                                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF3B5998), foregroundColor: Colors.white),
+                                                    icon: const Icon(
+                                                      Icons.image,
+                                                    ),
+                                                    label: Text(
+                                                      _logoBytes == null
+                                                          ? 'File Immagine'
+                                                          : 'Cambia Immagine',
+                                                    ),
+                                                    style:
+                                                        ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                              const Color(
+                                                                0xFF3B5998,
+                                                              ),
+                                                          foregroundColor:
+                                                              Colors.white,
+                                                        ),
                                                   ),
                                                 ),
                                               ],
@@ -537,20 +712,38 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
                                     // Right Column
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
                                         children: [
                                           _buildRow(
-                                            _buildField('Partita IVA*', _partitaIvaController),
-                                            _buildField('Codice Fiscale', _codiceFiscaleController),
+                                            _buildField(
+                                              'Partita IVA*',
+                                              _partitaIvaController,
+                                            ),
+                                            _buildField(
+                                              'Codice Fiscale',
+                                              _codiceFiscaleController,
+                                            ),
                                           ),
                                           const SizedBox(height: 12),
                                           _buildRow(
-                                            _buildField('Codice Ateco', _codiceAtecoController),
-                                            _buildField('Banca d\'appoggio', _bancaAppoggioController),
+                                            _buildField(
+                                              'Codice Ateco',
+                                              _codiceAtecoController,
+                                            ),
+                                            _buildField(
+                                              'Banca d\'appoggio',
+                                              _bancaAppoggioController,
+                                            ),
                                           ),
                                           const SizedBox(height: 12),
                                           Expanded(
-                                            child: _buildField('Descrizione', _descrizioneController, isExpanded: true, fullWidth: true),
+                                            child: _buildField(
+                                              'Descrizione',
+                                              _descrizioneController,
+                                              isExpanded: true,
+                                              fullWidth: true,
+                                            ),
                                           ), // Expanded description
                                         ],
                                       ),
@@ -583,7 +776,14 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
     );
   }
 
-  Widget _buildField(String label, TextEditingController controller, {bool fullWidth = false, int maxLines = 1, double? width, bool isExpanded = false}) {
+  Widget _buildField(
+    String label,
+    TextEditingController controller, {
+    bool fullWidth = false,
+    int maxLines = 1,
+    double? width,
+    bool isExpanded = false,
+  }) {
     Widget inputWidget = SizedBox(
       width: fullWidth ? double.infinity : width,
       child: TextFormField(
@@ -595,7 +795,10 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(color: Colors.grey.shade400),
@@ -606,7 +809,10 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+            borderSide: BorderSide(
+              color: Theme.of(context).primaryColor,
+              width: 2,
+            ),
           ),
         ),
       ),
@@ -617,7 +823,11 @@ class _SocietaEditScreenState extends State<SocietaEditScreen> {
       children: [
         Text(
           label,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+            color: Colors.black87,
+          ),
         ),
         const SizedBox(height: 8),
         if (isExpanded) Expanded(child: inputWidget) else inputWidget,

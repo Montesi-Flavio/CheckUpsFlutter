@@ -30,7 +30,9 @@ class _SocietaListScreenState extends State<SocietaListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Società'),
-        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _refresh)],
+        actions: [
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _refresh),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -52,7 +54,10 @@ class _SocietaListScreenState extends State<SocietaListScreen> {
                   const Icon(Icons.error_outline, size: 48, color: Colors.red),
                   const SizedBox(height: 16),
                   Text('Errore: ${snapshot.error}'),
-                  ElevatedButton(onPressed: _refresh, child: const Text('Riprova')),
+                  ElevatedButton(
+                    onPressed: _refresh,
+                    child: const Text('Riprova'),
+                  ),
                 ],
               ),
             );
@@ -70,8 +75,17 @@ class _SocietaListScreenState extends State<SocietaListScreen> {
               final societa = list[index];
               return ListTile(
                 leading: societa.hasImage
-                    ? CircleAvatar(backgroundImage: MemoryImage(societa.logoBytes!), onBackgroundImageError: (_, __) {})
-                    : CircleAvatar(child: Text(societa.nome.isNotEmpty ? societa.nome[0].toUpperCase() : '?')),
+                    ? CircleAvatar(
+                        backgroundImage: MemoryImage(societa.logoBytes!),
+                        onBackgroundImageError: (_, __) {},
+                      )
+                    : CircleAvatar(
+                        child: Text(
+                          societa.nome.isNotEmpty
+                              ? societa.nome[0].toUpperCase()
+                              : '?',
+                        ),
+                      ),
                 title: Text(societa.nome),
                 subtitle: Text(societa.indirizzo),
                 onTap: () {

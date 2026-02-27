@@ -31,7 +31,9 @@ class _ScadenzeScreenState extends State<ScadenzeScreen> {
   }
 
   String _formatProvvedimento(Provvedimento p) {
-    final scadenza = p.dataScadenza != null ? _dateFormat.format(p.dataScadenza!) : 'N/A';
+    final scadenza = p.dataScadenza != null
+        ? _dateFormat.format(p.dataScadenza!)
+        : 'N/A';
     return '${p.nome} - Rischio: ${p.rischio} - Scadenza: $scadenza';
   }
 
@@ -39,7 +41,12 @@ class _ScadenzeScreenState extends State<ScadenzeScreen> {
     final text = list.map(_formatProvvedimento).join('\n');
     await Clipboard.setData(ClipboardData(text: text));
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Provvedimenti copiati negli appunti'), backgroundColor: Colors.green));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Provvedimenti copiati negli appunti'),
+          backgroundColor: Colors.green,
+        ),
+      );
     }
   }
 
@@ -54,7 +61,9 @@ class _ScadenzeScreenState extends State<ScadenzeScreen> {
     if (result != null) {
       final file = File(result);
       final content = StringBuffer();
-      content.writeln('PROVVEDIMENTI SCADUTI - ${_dateFormat.format(DateTime.now())}');
+      content.writeln(
+        'PROVVEDIMENTI SCADUTI - ${_dateFormat.format(DateTime.now())}',
+      );
       content.writeln('=' * 60);
       content.writeln();
 
@@ -63,14 +72,21 @@ class _ScadenzeScreenState extends State<ScadenzeScreen> {
         content.writeln('${i + 1}. ${p.nome}');
         content.writeln('   Rischio: ${p.rischio}');
         content.writeln('   Soggetti Esposti: ${p.soggettiEsposti}');
-        content.writeln('   Data Scadenza: ${p.dataScadenza != null ? _dateFormat.format(p.dataScadenza!) : 'N/A'}');
+        content.writeln(
+          '   Data Scadenza: ${p.dataScadenza != null ? _dateFormat.format(p.dataScadenza!) : 'N/A'}',
+        );
         content.writeln();
       }
 
       await file.writeAsString(content.toString());
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('File salvato: ${file.path}'), backgroundColor: Colors.green));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('File salvato: ${file.path}'),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
     }
   }
@@ -88,18 +104,35 @@ class _ScadenzeScreenState extends State<ScadenzeScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             decoration: BoxDecoration(
               color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2))],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: Row(
               children: [
-                Icon(Icons.warning_amber_rounded, color: Colors.orange[700], size: 32),
+                Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.orange[700],
+                  size: 32,
+                ),
                 const SizedBox(width: 12),
                 Text(
                   'Provvedimenti Scaduti',
-                  style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Colors.black87),
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                 ),
                 const Spacer(),
-                IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context), tooltip: 'Chiudi'),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                  tooltip: 'Chiudi',
+                ),
               ],
             ),
           ),
@@ -117,7 +150,11 @@ class _ScadenzeScreenState extends State<ScadenzeScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
+                        Icon(
+                          Icons.error_outline,
+                          size: 64,
+                          color: Colors.red[300],
+                        ),
                         const SizedBox(height: 16),
                         Text('Errore: ${snapshot.error}'),
                       ],
@@ -132,11 +169,23 @@ class _ScadenzeScreenState extends State<ScadenzeScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.check_circle_outline, size: 80, color: Colors.green[300]),
+                        Icon(
+                          Icons.check_circle_outline,
+                          size: 80,
+                          color: Colors.green[300],
+                        ),
                         const SizedBox(height: 16),
-                        Text('Nessun provvedimento scaduto', style: theme.textTheme.titleLarge?.copyWith(color: Colors.grey[600])),
+                        Text(
+                          'Nessun provvedimento scaduto',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                        ),
                         const SizedBox(height: 8),
-                        Text('Tutti i provvedimenti sono in regola!', style: TextStyle(color: Colors.grey[500])),
+                        Text(
+                          'Tutti i provvedimenti sono in regola!',
+                          style: TextStyle(color: Colors.grey[500]),
+                        ),
                       ],
                     ),
                   );
@@ -149,28 +198,46 @@ class _ScadenzeScreenState extends State<ScadenzeScreen> {
                         // Table Header
                         Container(
                           color: Colors.grey[200],
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           child: const Row(
                             children: [
                               SizedBox(
                                 width: 50,
-                                child: Text('N°', style: TextStyle(fontWeight: FontWeight.bold)),
+                                child: Text(
+                                  'N°',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
                               Expanded(
                                 flex: 3,
-                                child: Text('Nome', style: TextStyle(fontWeight: FontWeight.bold)),
+                                child: Text(
+                                  'Nome',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
                               Expanded(
                                 flex: 2,
-                                child: Text('Rischio', style: TextStyle(fontWeight: FontWeight.bold)),
+                                child: Text(
+                                  'Rischio',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
                               Expanded(
                                 flex: 2,
-                                child: Text('Soggetti Esposti', style: TextStyle(fontWeight: FontWeight.bold)),
+                                child: Text(
+                                  'Soggetti Esposti',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
                               Expanded(
                                 flex: 1,
-                                child: Text('Scadenza', style: TextStyle(fontWeight: FontWeight.bold)),
+                                child: Text(
+                                  'Scadenza',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ],
                           ),
@@ -181,31 +248,63 @@ class _ScadenzeScreenState extends State<ScadenzeScreen> {
                           child: ListView.separated(
                             padding: const EdgeInsets.only(bottom: 100),
                             itemCount: list.length,
-                            separatorBuilder: (_, __) => const Divider(height: 1),
+                            separatorBuilder: (_, __) =>
+                                const Divider(height: 1),
                             itemBuilder: (context, index) {
                               final prov = list[index];
-                              final isOverdue = prov.dataScadenza != null && DateTime.now().difference(prov.dataScadenza!).inDays > 30;
+                              final isOverdue =
+                                  prov.dataScadenza != null &&
+                                  DateTime.now()
+                                          .difference(prov.dataScadenza!)
+                                          .inDays >
+                                      30;
 
                               return Container(
                                 color: isOverdue ? Colors.red[50] : null,
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
                                 child: Row(
                                   children: [
-                                    SizedBox(width: 50, child: Text('${index + 1}')),
+                                    SizedBox(
+                                      width: 50,
+                                      child: Text('${index + 1}'),
+                                    ),
                                     Expanded(flex: 3, child: Text(prov.nome)),
-                                    Expanded(flex: 2, child: Text(prov.rischio)),
-                                    Expanded(flex: 2, child: Text(prov.soggettiEsposti)),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(prov.rischio),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(prov.soggettiEsposti),
+                                    ),
                                     Expanded(
                                       flex: 1,
                                       child: Row(
                                         children: [
-                                          Icon(Icons.calendar_today, size: 16, color: isOverdue ? Colors.red : Colors.orange),
+                                          Icon(
+                                            Icons.calendar_today,
+                                            size: 16,
+                                            color: isOverdue
+                                                ? Colors.red
+                                                : Colors.orange,
+                                          ),
                                           const SizedBox(width: 4),
                                           Text(
-                                            prov.dataScadenza != null ? _dateFormat.format(prov.dataScadenza!) : 'N/A',
+                                            prov.dataScadenza != null
+                                                ? _dateFormat.format(
+                                                    prov.dataScadenza!,
+                                                  )
+                                                : 'N/A',
                                             style: TextStyle(
-                                              color: isOverdue ? Colors.red : Colors.orange[800],
-                                              fontWeight: isOverdue ? FontWeight.bold : null,
+                                              color: isOverdue
+                                                  ? Colors.red
+                                                  : Colors.orange[800],
+                                              fontWeight: isOverdue
+                                                  ? FontWeight.bold
+                                                  : null,
                                             ),
                                           ),
                                         ],

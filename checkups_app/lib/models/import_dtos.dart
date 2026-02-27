@@ -8,7 +8,12 @@ class TitoloImportDto {
   final String unitaLocaleNome;
   final String repartoNome;
 
-  TitoloImportDto({required this.titolo, required this.societaNome, required this.unitaLocaleNome, required this.repartoNome});
+  TitoloImportDto({
+    required this.titolo,
+    required this.societaNome,
+    required this.unitaLocaleNome,
+    required this.repartoNome,
+  });
 }
 
 class OggettoImportDto {

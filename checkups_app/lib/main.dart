@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:window_manager/window_manager.dart';
 import 'repositories/database_repository.dart';
+import 'services/email_service.dart';
 import 'screens/home_screen.dart';
 
 void main() async {
@@ -27,8 +28,34 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    _initEmailCheck();
+  }
+
+  Future<void> _initEmailCheck() async {
+    // Nota: devi sostituire xxxx con la tua App Password di Gmail per funzionare in prod
+    try {
+      final repo = DatabaseRepository();
+      final emailService = EmailService(username: 'tuamail@gmail.com', initialPassword: 'xxxx');
+      int emailsSent = await emailService.checkAndSendDeadlines(repo);
+      if (emailsSent > 0) {
+        print("Emails auto inviate all'avvio: \$emailsSent");
+      }
+      await repo.close();
+    } catch (e) {
+      print('Errore Email Service init: \$e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

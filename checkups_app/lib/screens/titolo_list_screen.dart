@@ -18,7 +18,12 @@ class TitoloListScreen extends StatefulWidget {
   final UnitaLocale unitaLocale;
   final Reparto reparto;
 
-  const TitoloListScreen({super.key, required this.societa, required this.unitaLocale, required this.reparto});
+  const TitoloListScreen({
+    super.key,
+    required this.societa,
+    required this.unitaLocale,
+    required this.reparto,
+  });
 
   @override
   State<TitoloListScreen> createState() => _TitoloListScreenState();
@@ -55,9 +60,16 @@ class _TitoloListScreenState extends State<TitoloListScreen> {
         if (result != null && mounted) {
           final repo = context.read<DatabaseRepository>();
           final currentList = await repo.getTitoloList();
-          final maxId = currentList.isEmpty ? 0 : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+          final maxId = currentList.isEmpty
+              ? 0
+              : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
 
-          final newTitolo = Titolo(id: maxId + 1, idReparto: result.idReparto, priorita: result.priorita, descrizione: result.descrizione);
+          final newTitolo = Titolo(
+            id: maxId + 1,
+            idReparto: result.idReparto,
+            priorita: result.priorita,
+            descrizione: result.descrizione,
+          );
 
           await repo.insertTitolo(newTitolo);
           _refresh();
@@ -75,39 +87,74 @@ class _TitoloListScreenState extends State<TitoloListScreen> {
             title: 'Importa Titoli',
             items: candidates,
             columns: [
-              ImportColumn(title: 'Società', getValue: (item) => item.societaNome),
-              ImportColumn(title: 'Unità Locale', getValue: (item) => item.unitaLocaleNome),
-              ImportColumn(title: 'Reparto', getValue: (item) => item.repartoNome),
-              ImportColumn(title: 'Titolo', getValue: (item) => item.titolo.descrizione, flex: 2),
+              ImportColumn(
+                title: 'Società',
+                getValue: (item) => item.societaNome,
+              ),
+              ImportColumn(
+                title: 'Unità Locale',
+                getValue: (item) => item.unitaLocaleNome,
+              ),
+              ImportColumn(
+                title: 'Reparto',
+                getValue: (item) => item.repartoNome,
+              ),
+              ImportColumn(
+                title: 'Titolo',
+                getValue: (item) => item.titolo.descrizione,
+                flex: 2,
+              ),
             ],
           ),
         );
 
         if (results != null && results.isNotEmpty && mounted) {
           final currentList = await repo.getTitoloList();
-          int maxId = currentList.isEmpty ? 0 : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+          int maxId = currentList.isEmpty
+              ? 0
+              : currentList.map((e) => e.id).reduce((a, b) => a > b ? a : b);
 
           for (final result in results) {
             maxId++;
-            final newTitolo = Titolo(id: maxId, idReparto: widget.reparto.id, priorita: result.titolo.priorita, descrizione: result.titolo.descrizione);
+            final newTitolo = Titolo(
+              id: maxId,
+              idReparto: widget.reparto.id,
+              priorita: result.titolo.priorita,
+              descrizione: result.titolo.descrizione,
+            );
             await repo.insertTitolo(newTitolo);
 
             // Recursive Import: Oggetti
             final oggetti = await repo.getOggettiByTitoloId(result.titolo.id);
             if (oggetti.isNotEmpty) {
               final maxOggettoIdResult = await repo.getOggettoList();
-              int nextOggettoId = maxOggettoIdResult.isEmpty ? 0 : maxOggettoIdResult.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+              int nextOggettoId = maxOggettoIdResult.isEmpty
+                  ? 0
+                  : maxOggettoIdResult
+                        .map((e) => e.id)
+                        .reduce((a, b) => a > b ? a : b);
 
               final maxProvIdResult = await repo.getProvvedimentoList();
-              int nextProvId = maxProvIdResult.isEmpty ? 0 : maxProvIdResult.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+              int nextProvId = maxProvIdResult.isEmpty
+                  ? 0
+                  : maxProvIdResult
+                        .map((e) => e.id)
+                        .reduce((a, b) => a > b ? a : b);
 
               for (final oggetto in oggetti) {
                 nextOggettoId++;
-                final newOggetto = Oggetto(id: nextOggettoId, idTitolo: newTitolo.id, priorita: oggetto.priorita, nome: oggetto.nome);
+                final newOggetto = Oggetto(
+                  id: nextOggettoId,
+                  idTitolo: newTitolo.id,
+                  priorita: oggetto.priorita,
+                  nome: oggetto.nome,
+                );
                 await repo.insertOggetto(newOggetto);
 
                 // Recursive Import: Provvedimenti
-                final provvedimenti = await repo.getProvvedimentiByOggettoId(oggetto.id);
+                final provvedimenti = await repo.getProvvedimentiByOggettoId(
+                  oggetto.id,
+                );
                 if (provvedimenti.isNotEmpty) {
                   for (final prov in provvedimenti) {
                     nextProvId++;
@@ -132,7 +179,13 @@ class _TitoloListScreenState extends State<TitoloListScreen> {
 
           _refresh();
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${results.length} titoli importati con successo')));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  '${results.length} titoli importati con successo',
+                ),
+              ),
+            );
           }
         }
       },
@@ -150,21 +203,32 @@ class _TitoloListScreenState extends State<TitoloListScreen> {
           final list = snapshot.data ?? [];
 
           // Filter by Reparto
-          final filteredList = list.where((t) => t.idReparto == widget.reparto.id).toList();
+          final filteredList = list
+              .where((t) => t.idReparto == widget.reparto.id)
+              .toList();
 
           return Column(
             children: [
               Container(
                 color: Colors.grey[200],
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: const Row(
                   children: [
                     SizedBox(
                       width: 40,
-                      child: Text('N°', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'N°',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Expanded(
-                      child: Text('Descrizione', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'Descrizione',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
@@ -188,10 +252,21 @@ class _TitoloListScreenState extends State<TitoloListScreen> {
                           items: [
                             PopupMenuItem(
                               enabled: false,
-                              child: Text(titolo.descrizione, style: const TextStyle(fontWeight: FontWeight.bold)),
+                              child: Text(
+                                titolo.descrizione,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                            const PopupMenuItem(value: 'edit', child: Text('Modifica')),
-                            const PopupMenuItem(value: 'delete', child: Text('Elimina')),
+                            const PopupMenuItem(
+                              value: 'edit',
+                              child: Text('Modifica'),
+                            ),
+                            const PopupMenuItem(
+                              value: 'delete',
+                              child: Text('Elimina'),
+                            ),
                           ],
                         ).then((value) async {
                           if (value == 'edit') {
@@ -200,7 +275,9 @@ class _TitoloListScreenState extends State<TitoloListScreen> {
                               builder: (_) => TitoloEditDialog(titolo: titolo),
                             );
                             if (result != null && mounted) {
-                              await context.read<DatabaseRepository>().updateTitolo(result);
+                              await context
+                                  .read<DatabaseRepository>()
+                                  .updateTitolo(result);
                               _refresh();
                             }
                           } else if (value == 'delete') {
@@ -208,15 +285,25 @@ class _TitoloListScreenState extends State<TitoloListScreen> {
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 title: const Text('Conferma Eliminazione'),
-                                content: Text('Sei sicuro di voler eliminare il titolo "${titolo.descrizione}"?'),
+                                content: Text(
+                                  'Sei sicuro di voler eliminare il titolo "${titolo.descrizione}"?',
+                                ),
                                 actions: [
-                                  TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Annulla')),
-                                  TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Elimina')),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, false),
+                                    child: const Text('Annulla'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, true),
+                                    child: const Text('Elimina'),
+                                  ),
                                 ],
                               ),
                             );
                             if (confirm == true && mounted) {
-                              await context.read<DatabaseRepository>().deleteTitoloRecursive(titolo.id);
+                              await context
+                                  .read<DatabaseRepository>()
+                                  .deleteTitoloRecursive(titolo.id);
                               _refresh();
                             }
                           }
@@ -227,16 +314,26 @@ class _TitoloListScreenState extends State<TitoloListScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) =>
-                                  OggettoListScreen(societa: widget.societa, unitaLocale: widget.unitaLocale, reparto: widget.reparto, titolo: titolo),
+                              builder: (_) => OggettoListScreen(
+                                societa: widget.societa,
+                                unitaLocale: widget.unitaLocale,
+                                reparto: widget.reparto,
+                                titolo: titolo,
+                              ),
                             ),
                           );
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           child: Row(
                             children: [
-                              SizedBox(width: 40, child: Text('${index + 1}')), // Or priorita
+                              SizedBox(
+                                width: 40,
+                                child: Text('${index + 1}'),
+                              ), // Or priorita
                               Expanded(child: Text(titolo.descrizione)),
                             ],
                           ),

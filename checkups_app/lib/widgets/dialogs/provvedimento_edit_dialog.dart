@@ -5,10 +5,15 @@ class ProvvedimentoEditDialog extends StatefulWidget {
   final Provvedimento? provvedimento;
   final int? idOggetto;
 
-  const ProvvedimentoEditDialog({super.key, this.provvedimento, this.idOggetto});
+  const ProvvedimentoEditDialog({
+    super.key,
+    this.provvedimento,
+    this.idOggetto,
+  });
 
   @override
-  State<ProvvedimentoEditDialog> createState() => _ProvvedimentoEditDialogState();
+  State<ProvvedimentoEditDialog> createState() =>
+      _ProvvedimentoEditDialogState();
 }
 
 class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
@@ -26,17 +31,35 @@ class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
   @override
   void initState() {
     super.initState();
-    _rischioController = TextEditingController(text: widget.provvedimento?.rischio ?? '');
-    _nomeController = TextEditingController(text: widget.provvedimento?.nome ?? '');
-    _soggettiEspostiController = TextEditingController(text: widget.provvedimento?.soggettiEsposti ?? '');
-    _stimaDController = TextEditingController(text: widget.provvedimento?.stimaD.toString() ?? '0');
-    _stimaPController = TextEditingController(text: widget.provvedimento?.stimaP.toString() ?? '0');
+    _rischioController = TextEditingController(
+      text: widget.provvedimento?.rischio ?? '',
+    );
+    _nomeController = TextEditingController(
+      text: widget.provvedimento?.nome ?? '',
+    );
+    _soggettiEspostiController = TextEditingController(
+      text: widget.provvedimento?.soggettiEsposti ?? '',
+    );
+    _stimaDController = TextEditingController(
+      text: widget.provvedimento?.stimaD.toString() ?? '0',
+    );
+    _stimaPController = TextEditingController(
+      text: widget.provvedimento?.stimaP.toString() ?? '0',
+    );
     _priorita = widget.provvedimento?.priorita ?? 0;
     _dataInizio = widget.provvedimento?.dataInizio;
     _dataScadenza = widget.provvedimento?.dataScadenza;
 
-    _dataInizioController = TextEditingController(text: _dataInizio != null ? '${_dataInizio!.day}/${_dataInizio!.month}/${_dataInizio!.year}' : '');
-    _dataScadenzaController = TextEditingController(text: _dataScadenza != null ? '${_dataScadenza!.day}/${_dataScadenza!.month}/${_dataScadenza!.year}' : '');
+    _dataInizioController = TextEditingController(
+      text: _dataInizio != null
+          ? '${_dataInizio!.day}/${_dataInizio!.month}/${_dataInizio!.year}'
+          : '',
+    );
+    _dataScadenzaController = TextEditingController(
+      text: _dataScadenza != null
+          ? '${_dataScadenza!.day}/${_dataScadenza!.month}/${_dataScadenza!.year}'
+          : '',
+    );
   }
 
   @override
@@ -63,10 +86,12 @@ class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
       setState(() {
         if (isStart) {
           _dataInizio = picked;
-          _dataInizioController.text = '${picked.day}/${picked.month}/${picked.year}';
+          _dataInizioController.text =
+              '${picked.day}/${picked.month}/${picked.year}';
         } else {
           _dataScadenza = picked;
-          _dataScadenzaController.text = '${picked.day}/${picked.month}/${picked.year}';
+          _dataScadenzaController.text =
+              '${picked.day}/${picked.month}/${picked.year}';
         }
       });
     }
@@ -87,8 +112,12 @@ class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                widget.provvedimento != null ? 'Modifica Provvedimento' : 'Nuovo Provvedimento',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.black87),
+                widget.provvedimento != null
+                    ? 'Modifica Provvedimento'
+                    : 'Nuovo Provvedimento',
+                style: Theme.of(
+                  context,
+                ).textTheme.headlineSmall?.copyWith(color: Colors.black87),
               ),
               const SizedBox(height: 24),
 
@@ -97,7 +126,13 @@ class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
                 children: [
                   const SizedBox(
                     width: 100,
-                    child: Text('N°', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                    child: Text(
+                      'N°',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                   Container(
                     width: 80,
@@ -113,16 +148,33 @@ class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8),
-                            child: Text('$_priorita', style: const TextStyle(fontSize: 14)),
+                            child: Text(
+                              '$_priorita',
+                              style: const TextStyle(fontSize: 14),
+                            ),
                           ),
                         ),
                         Column(
                           children: [
                             Expanded(
-                              child: InkWell(onTap: () => setState(() => _priorita++), child: const Icon(Icons.arrow_drop_up, size: 16)),
+                              child: InkWell(
+                                onTap: () => setState(() => _priorita++),
+                                child: const Icon(
+                                  Icons.arrow_drop_up,
+                                  size: 16,
+                                ),
+                              ),
                             ),
                             Expanded(
-                              child: InkWell(onTap: () => setState(() => _priorita > 0 ? _priorita-- : 0), child: const Icon(Icons.arrow_drop_down, size: 16)),
+                              child: InkWell(
+                                onTap: () => setState(
+                                  () => _priorita > 0 ? _priorita-- : 0,
+                                ),
+                                child: const Icon(
+                                  Icons.arrow_drop_down,
+                                  size: 16,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -144,18 +196,42 @@ class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
 
               Row(
                 children: [
-                  Expanded(child: _buildRow('Stima D', _stimaDController, isNumber: true)),
+                  Expanded(
+                    child: _buildRow(
+                      'Stima D',
+                      _stimaDController,
+                      isNumber: true,
+                    ),
+                  ),
                   const SizedBox(width: 16),
-                  Expanded(child: _buildRow('Stima P', _stimaPController, isNumber: true)),
+                  Expanded(
+                    child: _buildRow(
+                      'Stima P',
+                      _stimaPController,
+                      isNumber: true,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
 
               Row(
                 children: [
-                  Expanded(child: _buildDateRow('Data Inizio', _dataInizioController, true)),
+                  Expanded(
+                    child: _buildDateRow(
+                      'Data Inizio',
+                      _dataInizioController,
+                      true,
+                    ),
+                  ),
                   const SizedBox(width: 16),
-                  Expanded(child: _buildDateRow('Data Scad.', _dataScadenzaController, false)),
+                  Expanded(
+                    child: _buildDateRow(
+                      'Data Scad.',
+                      _dataScadenzaController,
+                      false,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 32),
@@ -170,7 +246,9 @@ class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
                       backgroundColor: Colors.grey.shade200,
                       foregroundColor: Colors.black87,
                       side: BorderSide(color: Colors.grey.shade400),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
                     child: const Text('Annulla'),
                   ),
@@ -179,7 +257,10 @@ class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
                     onPressed: () {
                       final newProvvedimento = Provvedimento(
                         id: widget.provvedimento?.id ?? -1,
-                        idOggetto: widget.provvedimento?.idOggetto ?? widget.idOggetto ?? 0,
+                        idOggetto:
+                            widget.provvedimento?.idOggetto ??
+                            widget.idOggetto ??
+                            0,
                         priorita: _priorita,
                         rischio: _rischioController.text,
                         nome: _nomeController.text,
@@ -196,7 +277,9 @@ class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
                       foregroundColor: Colors.black87,
                       elevation: 1,
                       side: BorderSide(color: Colors.grey.shade400),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
                     child: const Text('Applica'),
                   ),
@@ -209,29 +292,48 @@ class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
     );
   }
 
-  Widget _buildRow(String label, TextEditingController controller, {int maxLines = 1, bool isNumber = false}) {
+  Widget _buildRow(
+    String label,
+    TextEditingController controller, {
+    int maxLines = 1,
+    bool isNumber = false,
+  }) {
     return Row(
-      crossAxisAlignment: maxLines > 1 ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      crossAxisAlignment: maxLines > 1
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.center,
       children: [
         SizedBox(
           width: 100,
           child: Padding(
-            padding: maxLines > 1 ? const EdgeInsets.only(top: 8.0) : EdgeInsets.zero,
-            child: Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+            padding: maxLines > 1
+                ? const EdgeInsets.only(top: 8.0)
+                : EdgeInsets.zero,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
           ),
         ),
         Expanded(
           child: SizedBox(
-            height: maxLines > 1 ? null : 32, // Height 32 for single line, auto for multi
+            height: maxLines > 1
+                ? null
+                : 32, // Height 32 for single line, auto for multi
             child: TextField(
               controller: controller,
               maxLines: maxLines,
               minLines: maxLines > 1 ? 3 : 1,
-              keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+              keyboardType: isNumber
+                  ? TextInputType.number
+                  : TextInputType.text,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 8,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(4),
                   borderSide: BorderSide(color: Colors.grey.shade400),
@@ -249,12 +351,19 @@ class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
     );
   }
 
-  Widget _buildDateRow(String label, TextEditingController controller, bool isStart) {
+  Widget _buildDateRow(
+    String label,
+    TextEditingController controller,
+    bool isStart,
+  ) {
     return Row(
       children: [
         SizedBox(
           width: 80,
-          child: Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+          child: Text(
+            label,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
         ),
         Expanded(
           child: Container(
@@ -269,7 +378,10 @@ class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(controller.text, style: const TextStyle(fontSize: 14)),
+                    child: Text(
+                      controller.text,
+                      style: const TextStyle(fontSize: 14),
+                    ),
                   ),
                 ),
                 InkWell(
@@ -278,10 +390,16 @@ class _ProvvedimentoEditDialogState extends State<ProvvedimentoEditDialog> {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      border: Border(left: BorderSide(color: Colors.grey.shade400)),
+                      border: Border(
+                        left: BorderSide(color: Colors.grey.shade400),
+                      ),
                       color: Colors.grey.shade200,
                     ),
-                    child: const Icon(Icons.calendar_today, size: 16, color: Colors.black54),
+                    child: const Icon(
+                      Icons.calendar_today,
+                      size: 16,
+                      color: Colors.black54,
+                    ),
                   ),
                 ),
               ],

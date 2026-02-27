@@ -12,6 +12,7 @@ class Societa extends TableData {
   String? codiceFiscale;
   String? bancaAppoggio;
   String? codiceAteco;
+  String? email;
   Uint8List? logoBytes;
 
   Societa({
@@ -26,6 +27,7 @@ class Societa extends TableData {
     this.codiceFiscale,
     this.bancaAppoggio,
     this.codiceAteco,
+    this.email,
     this.logoBytes,
   }) : super(id, 'societa', 'id_societa');
 

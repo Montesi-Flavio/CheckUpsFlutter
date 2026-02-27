@@ -53,7 +53,10 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
   }
 
   void _checkFormValid() {
-    final isValid = _nomeController.text.isNotEmpty && _localitaController.text.isNotEmpty && _provinciaController.text.isNotEmpty;
+    final isValid =
+        _nomeController.text.isNotEmpty &&
+        _localitaController.text.isNotEmpty &&
+        _provinciaController.text.isNotEmpty;
     if (_isFormValid != isValid) {
       setState(() => _isFormValid = isValid);
     }
@@ -64,7 +67,14 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
     super.initState();
     _loadData();
 
-    final controllers = [_nomeController, _indirizzoController, _localitaController, _provinciaController, _telefonoController, _emailController];
+    final controllers = [
+      _nomeController,
+      _indirizzoController,
+      _localitaController,
+      _provinciaController,
+      _telefonoController,
+      _emailController,
+    ];
 
     for (var controller in controllers) {
       controller.addListener(() {
@@ -83,7 +93,9 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
       // Filter by Societa if provided
       List<UnitaLocale> filteredList = list;
       if (widget.societa != null) {
-        filteredList = list.where((u) => u.idSocieta == widget.societa!.id).toList();
+        filteredList = list
+            .where((u) => u.idSocieta == widget.societa!.id)
+            .toList();
       }
 
       setState(() {
@@ -128,7 +140,9 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
   Future<bool> _saveUnitaLocale() async {
     if (_formKey.currentState?.validate() ?? false) {
       if (widget.societa == null) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Errore: Nessuna società selezionata')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Errore: Nessuna società selezionata')),
+        );
         return false;
       }
 
@@ -173,12 +187,16 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
         }
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Salvataggio completato')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Salvataggio completato')),
+          );
         }
         return true;
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Errore durante il salvataggio: $e')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Errore durante il salvataggio: $e')),
+          );
         }
         return false;
       } finally {
@@ -195,9 +213,14 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Conferma eliminazione'),
-        content: Text('Sei sicuro di voler eliminare l\'unità locale "${_selectedUnita!.nome}"?'),
+        content: Text(
+          'Sei sicuro di voler eliminare l\'unità locale "${_selectedUnita!.nome}"?',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Annulla')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Annulla'),
+          ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
@@ -215,11 +238,15 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
         await _loadData();
         _clearForm();
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unità locale eliminata')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Unità locale eliminata')),
+          );
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Errore durante l\'eliminazione: $e')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Errore durante l\'eliminazione: $e')),
+          );
         }
       } finally {
         if (mounted) setState(() => _isLoading = false);
@@ -236,7 +263,8 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
           // Header
           SharedHeader(
             isHomeActive: false,
-            onHomePressed: () => Navigator.popUntil(context, (route) => route.isFirst),
+            onHomePressed: () =>
+                Navigator.popUntil(context, (route) => route.isFirst),
             isAdminActive: true,
             onAdminPressed: () {},
           ),
@@ -247,7 +275,9 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
               padding: const EdgeInsets.all(32),
               child: Card(
                 elevation: 4,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Container(
                   constraints: const BoxConstraints(maxWidth: double.infinity),
                   padding: const EdgeInsets.all(24),
@@ -259,7 +289,8 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
                         children: [
                           Text(
                             'Unità Locale',
-                            style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.headlineMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
                           if (widget.societa != null)
@@ -267,7 +298,11 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Text(
                                 'Società: ${widget.societa!.nome}',
-                                style: const TextStyle(fontSize: 18, color: Colors.grey, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                         ],
@@ -278,7 +313,11 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
                       Row(
                         children: [
                           // Back Button
-                          ModernActionButton(icon: Icons.arrow_back_ios_new, onPressed: () => Navigator.pop(context), tooltip: 'Indietro'),
+                          ModernActionButton(
+                            icon: Icons.arrow_back_ios_new,
+                            onPressed: () => Navigator.pop(context),
+                            tooltip: 'Indietro',
+                          ),
                           const SizedBox(width: 8),
 
                           // Action Icons
@@ -286,10 +325,16 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
                             icon: Icons.save,
                             label: 'Salva',
                             isPrimary: true,
-                            onPressed: (_isFormValid && _isDirty) ? () => _saveUnitaLocale() : null,
+                            onPressed: (_isFormValid && _isDirty)
+                                ? () => _saveUnitaLocale()
+                                : null,
                           ),
                           const SizedBox(width: 8),
-                          ModernActionButton(icon: Icons.close, onPressed: _clearForm, tooltip: 'Resetta campi'),
+                          ModernActionButton(
+                            icon: Icons.close,
+                            onPressed: _clearForm,
+                            tooltip: 'Resetta campi',
+                          ),
                           const SizedBox(width: 8),
                           ModernActionButton(
                             icon: Icons.delete_outline,
@@ -311,19 +356,41 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
                                 return DropdownMenu<UnitaLocale>(
                                   controller: _searchController,
                                   width: constraints.maxWidth,
-                                  label: const Text('Seleziona unità locale...'),
+                                  label: const Text(
+                                    'Seleziona unità locale...',
+                                  ),
                                   enableFilter: true,
                                   menuHeight: 300,
-                                  dropdownMenuEntries: (_unitaList.toList()..sort((a, b) => a.nome.toLowerCase().compareTo(b.nome.toLowerCase())))
-                                      .map((u) => DropdownMenuEntry<UnitaLocale>(value: u, label: u.nome))
-                                      .toList(),
+                                  dropdownMenuEntries:
+                                      (_unitaList.toList()..sort(
+                                            (a, b) =>
+                                                a.nome.toLowerCase().compareTo(
+                                                  b.nome.toLowerCase(),
+                                                ),
+                                          ))
+                                          .map(
+                                            (u) =>
+                                                DropdownMenuEntry<UnitaLocale>(
+                                                  value: u,
+                                                  label: u.nome,
+                                                ),
+                                          )
+                                          .toList(),
                                   onSelected: _populateForm,
-                                  inputDecorationTheme: const InputDecorationTheme(
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                                    border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(4))),
-                                  ),
+                                  inputDecorationTheme:
+                                      const InputDecorationTheme(
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide.none,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(4),
+                                          ),
+                                        ),
+                                      ),
                                 );
                               },
                             ),
@@ -342,21 +409,38 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
                                     if (success) {
                                       ScaffoldMessenger.of(
                                         context,
-                                      ).showSnackBar(const SnackBar(content: Text('Unità locale creata. Selezionala per procedere.')));
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Unità locale creata. Selezionala per procedere.',
+                                          ),
+                                        ),
+                                      );
                                     }
                                   } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Seleziona un\'unità locale per procedere')));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Seleziona un\'unità locale per procedere',
+                                        ),
+                                      ),
+                                    );
                                   }
                                 } else {
                                   // Selected not null
                                   if (_isDirty) {
                                     if (_isFormValid) {
                                       final success = await _saveUnitaLocale();
-                                      if (success && context.mounted && _selectedUnita != null) {
+                                      if (success &&
+                                          context.mounted &&
+                                          _selectedUnita != null) {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (_) => RepartoListScreen(societa: widget.societa!, unitaLocale: _selectedUnita!),
+                                            builder: (_) => RepartoListScreen(
+                                              societa: widget.societa!,
+                                              unitaLocale: _selectedUnita!,
+                                            ),
                                           ),
                                         );
                                       }
@@ -365,13 +449,22 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => RepartoListScreen(societa: widget.societa!, unitaLocale: _selectedUnita!),
+                                        builder: (_) => RepartoListScreen(
+                                          societa: widget.societa!,
+                                          unitaLocale: _selectedUnita!,
+                                        ),
                                       ),
                                     );
                                   }
                                 }
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Errore: Nessuna società selezionata')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Errore: Nessuna società selezionata',
+                                    ),
+                                  ),
+                                );
                               }
                             },
                             tooltip: 'Vai a Reparti',
@@ -390,13 +483,31 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
                               // Left Column
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
-                                    _buildField('Nome Unità*', _nomeController, fullWidth: true),
+                                    _buildField(
+                                      'Nome Unità*',
+                                      _nomeController,
+                                      fullWidth: true,
+                                    ),
                                     const SizedBox(height: 12),
-                                    _buildField('Indirizzo', _indirizzoController, fullWidth: true),
+                                    _buildField(
+                                      'Indirizzo',
+                                      _indirizzoController,
+                                      fullWidth: true,
+                                    ),
                                     const SizedBox(height: 12),
-                                    _buildRow(_buildField('Località*', _localitaController), _buildField('Provincia*', _provinciaController)),
+                                    _buildRow(
+                                      _buildField(
+                                        'Località*',
+                                        _localitaController,
+                                      ),
+                                      _buildField(
+                                        'Provincia*',
+                                        _provinciaController,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -404,17 +515,24 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
                               // Right Column
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
                                     _buildField(
                                       'Telefono',
                                       _telefonoController,
                                       fullWidth: true,
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
                                     ),
                                     const SizedBox(height: 12),
-                                    _buildField('Email', _emailController, fullWidth: true),
+                                    _buildField(
+                                      'Email',
+                                      _emailController,
+                                      fullWidth: true,
+                                    ),
                                     const Spacer(),
                                   ],
                                 ),
@@ -458,7 +576,11 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
       children: [
         Text(
           label,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+            color: Colors.black87,
+          ),
         ),
         const SizedBox(height: 8),
         SizedBox(
@@ -472,7 +594,10 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: Colors.grey.shade400),
@@ -483,7 +608,10 @@ class _UnitaLocaleEditScreenState extends State<UnitaLocaleEditScreen> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                  width: 2,
+                ),
               ),
             ),
           ),

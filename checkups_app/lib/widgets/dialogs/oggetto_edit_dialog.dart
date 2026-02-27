@@ -43,7 +43,9 @@ class _OggettoEditDialogState extends State<OggettoEditDialog> {
           children: [
             Text(
               widget.oggetto != null ? 'Modifica Oggetto' : 'Nuovo Oggetto',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.black87),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(color: Colors.black87),
             ),
             const SizedBox(height: 24),
 
@@ -52,7 +54,10 @@ class _OggettoEditDialogState extends State<OggettoEditDialog> {
               children: [
                 const SizedBox(
                   width: 80,
-                  child: Text('N°', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  child: Text(
+                    'N°',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
                 ),
                 Container(
                   width: 80,
@@ -68,16 +73,30 @@ class _OggettoEditDialogState extends State<OggettoEditDialog> {
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(left: 8),
-                          child: Text('$_priorita', style: const TextStyle(fontSize: 14)),
+                          child: Text(
+                            '$_priorita',
+                            style: const TextStyle(fontSize: 14),
+                          ),
                         ),
                       ),
                       Column(
                         children: [
                           Expanded(
-                            child: InkWell(onTap: () => setState(() => _priorita++), child: const Icon(Icons.arrow_drop_up, size: 16)),
+                            child: InkWell(
+                              onTap: () => setState(() => _priorita++),
+                              child: const Icon(Icons.arrow_drop_up, size: 16),
+                            ),
                           ),
                           Expanded(
-                            child: InkWell(onTap: () => setState(() => _priorita > 0 ? _priorita-- : 0), child: const Icon(Icons.arrow_drop_down, size: 16)),
+                            child: InkWell(
+                              onTap: () => setState(
+                                () => _priorita > 0 ? _priorita-- : 0,
+                              ),
+                              child: const Icon(
+                                Icons.arrow_drop_down,
+                                size: 16,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -93,7 +112,10 @@ class _OggettoEditDialogState extends State<OggettoEditDialog> {
               children: [
                 const SizedBox(
                   width: 80,
-                  child: Text('Nome', style: TextStyle(fontWeight: FontWeight.w500)),
+                  child: Text(
+                    'Nome',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
                 ),
                 Expanded(
                   child: SizedBox(
@@ -103,7 +125,10 @@ class _OggettoEditDialogState extends State<OggettoEditDialog> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 0,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(4),
                           borderSide: BorderSide(color: Colors.grey.shade400),
@@ -131,7 +156,9 @@ class _OggettoEditDialogState extends State<OggettoEditDialog> {
                     backgroundColor: Colors.grey.shade200,
                     foregroundColor: Colors.black87,
                     side: BorderSide(color: Colors.grey.shade400),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                   ),
                   child: const Text('Annulla'),
                 ),
@@ -140,7 +167,8 @@ class _OggettoEditDialogState extends State<OggettoEditDialog> {
                   onPressed: () {
                     final newOggetto = Oggetto(
                       id: widget.oggetto?.id ?? -1,
-                      idTitolo: widget.oggetto?.idTitolo ?? widget.idTitolo ?? 0,
+                      idTitolo:
+                          widget.oggetto?.idTitolo ?? widget.idTitolo ?? 0,
                       priorita: _priorita,
                       nome: _nomeController.text,
                     );
@@ -151,7 +179,9 @@ class _OggettoEditDialogState extends State<OggettoEditDialog> {
                     foregroundColor: Colors.black87,
                     elevation: 1,
                     side: BorderSide(color: Colors.grey.shade400),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                   ),
                   child: const Text('Applica'),
                 ),

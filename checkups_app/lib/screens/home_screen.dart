@@ -7,6 +7,7 @@ import '../models/unita_locale.dart';
 import 'societa_edit_screen.dart';
 import 'scadenze_screen.dart';
 import 'valutazione_rischi_screen.dart';
+import 'scadenze_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -52,7 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
         if (scaduti.isNotEmpty && mounted) {
           await prefs.setBool(_scadenzeShownKey, true);
           if (mounted) {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const ScadenzeScreen()));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ScadenzeScreen()),
+            );
           }
         }
       }
@@ -63,7 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<UnitaLocale> get _filteredUnitaLocali {
     if (_selectedSocieta == null) return [];
-    return _unitaLocaleList.where((u) => u.idSocieta == _selectedSocieta!.id).toList();
+    return _unitaLocaleList
+        .where((u) => u.idSocieta == _selectedSocieta!.id)
+        .toList();
   }
 
   @override
@@ -76,23 +82,75 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 // Header
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2))],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: Row(
                     children: [
                       // Logo
-                      Image.asset('assets/LOGOCheckUp.png', height: 64, fit: BoxFit.contain),
+                      Image.asset(
+                        'assets/LOGOCheckUp.png',
+                        height: 64,
+                        fit: BoxFit.contain,
+                      ),
                       const Spacer(),
                       // Nav Buttons
-                      _NavButton(text: 'HOME', isActive: true, onPressed: () {}),
+                      _NavButton(
+                        text: 'HOME',
+                        isActive: true,
+                        onPressed: () {},
+                      ),
                       const SizedBox(width: 16),
                       _NavButton(
                         text: 'CREA / MODIFICA',
                         isActive: false,
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => SocietaEditScreen(initialSocieta: _selectedSocieta))),
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => SocietaEditScreen(
+                              initialSocieta: _selectedSocieta,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      _NavButton(
+                        text: 'SCADENZE',
+                        isActive: false,
+                        onPressed: () {
+                          if (_selectedSocieta == null ||
+                              _selectedUnitaLocale == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Seleziona Società e Unità Locale prima di procedere',
+                                ),
+                                backgroundColor: Colors.orange,
+                              ),
+                            );
+                            return;
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ScadenzeListScreen(
+                                societa: _selectedSocieta!,
+                                unitaLocale: _selectedUnitaLocale!,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -111,10 +169,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Text(
                               'Benvenuto',
-                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Colors.black87),
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
                             ),
                             const SizedBox(height: 8),
-                            const Text('Seleziona Società e Unità Locale per iniziare', style: TextStyle(color: Colors.grey)),
+                            const Text(
+                              'Seleziona Società e Unità Locale per iniziare',
+                              style: TextStyle(color: Colors.grey),
+                            ),
                             const SizedBox(height: 32),
 
                             _buildDropdown<Societa>(
@@ -136,7 +201,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               label: 'Unità Locale',
                               value: _selectedUnitaLocale,
                               items: _filteredUnitaLocali,
-                              onChanged: (val) => setState(() => _selectedUnitaLocale = val),
+                              onChanged: (val) =>
+                                  setState(() => _selectedUnitaLocale = val),
                               itemLabelBuilder: (u) => u.nome,
                               icon: Icons.store,
                               enabled: _selectedSocieta != null,
@@ -158,16 +224,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         text: 'Valutazione Rischi',
                         icon: Icons.assignment,
                         onPressed: () {
-                          if (_selectedSocieta == null || _selectedUnitaLocale == null) {
+                          if (_selectedSocieta == null ||
+                              _selectedUnitaLocale == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Seleziona Società e Unità Locale prima di procedere'), backgroundColor: Colors.orange),
+                              const SnackBar(
+                                content: Text(
+                                  'Seleziona Società e Unità Locale prima di procedere',
+                                ),
+                                backgroundColor: Colors.orange,
+                              ),
                             );
                             return;
                           }
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => ValutazioneRischiScreen(societa: _selectedSocieta!, unitaLocale: _selectedUnitaLocale!),
+                              builder: (_) => ValutazioneRischiScreen(
+                                societa: _selectedSocieta!,
+                                unitaLocale: _selectedUnitaLocale!,
+                              ),
                             ),
                           );
                         },
@@ -177,7 +252,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       _FooterButton(
                         text: 'Scadenze',
                         icon: Icons.calendar_today,
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ScadenzeScreen())),
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ScadenzeScreen(),
+                          ),
+                        ),
                         isPrimary: false,
                       ),
                     ],
@@ -206,15 +286,31 @@ class _HomeScreenState extends State<HomeScreen> {
           width: constraints.maxWidth,
           initialSelection: value,
           label: Text(label),
-          leadingIcon: Icon(icon, color: enabled ? Theme.of(context).primaryColor : Colors.grey),
+          leadingIcon: Icon(
+            icon,
+            color: enabled ? Theme.of(context).primaryColor : Colors.grey,
+          ),
           enabled: enabled,
           enableFilter: true,
           requestFocusOnTap: true,
           onSelected: onChanged,
-          dropdownMenuEntries: (items.toList()..sort((a, b) => itemLabelBuilder(a).toLowerCase().compareTo(itemLabelBuilder(b).toLowerCase()))).map((item) {
-            return DropdownMenuEntry<T>(value: item, label: itemLabelBuilder(item));
-          }).toList(),
-          inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(filled: true, fillColor: Colors.white),
+          dropdownMenuEntries:
+              (items.toList()..sort(
+                    (a, b) => itemLabelBuilder(a).toLowerCase().compareTo(
+                      itemLabelBuilder(b).toLowerCase(),
+                    ),
+                  ))
+                  .map((item) {
+                    return DropdownMenuEntry<T>(
+                      value: item,
+                      label: itemLabelBuilder(item),
+                    );
+                  })
+                  .toList(),
+          inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(
+            filled: true,
+            fillColor: Colors.white,
+          ),
         );
       },
     );
@@ -226,14 +322,20 @@ class _NavButton extends StatelessWidget {
   final bool isActive;
   final VoidCallback onPressed;
 
-  const _NavButton({required this.text, required this.isActive, required this.onPressed});
+  const _NavButton({
+    required this.text,
+    required this.isActive,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        foregroundColor: isActive ? Theme.of(context).primaryColor : Colors.grey[700],
+        foregroundColor: isActive
+            ? Theme.of(context).primaryColor
+            : Colors.grey[700],
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
       child: Text(
@@ -256,7 +358,12 @@ class _FooterButton extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isPrimary;
 
-  const _FooterButton({required this.text, required this.icon, required this.onPressed, this.isPrimary = true});
+  const _FooterButton({
+    required this.text,
+    required this.icon,
+    required this.onPressed,
+    this.isPrimary = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -273,7 +380,10 @@ class _FooterButton extends StatelessWidget {
         ),
         onPressed: onPressed,
         icon: Icon(icon, size: 28),
-        label: Text(text, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        label: Text(
+          text,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
