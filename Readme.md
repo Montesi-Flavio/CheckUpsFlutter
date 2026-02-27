@@ -78,7 +78,7 @@ flutter run
 Panoramica della cartella lib/:
 
 Plaintext
-
+   ```bash
 lib/
  ┣ models/       # Modelli dati
  ┣ screens/      # Schermate dell'app
@@ -86,6 +86,7 @@ lib/
  ┣ services/     # Logica di business e Database
  ┣ utils/        # Costanti e temi
  ┗ main.dart     # Entry point
+```
 🤝 Contribuire
 I contributi sono benvenuti!
 
@@ -99,10 +100,10 @@ Fai il push (git push origin feature/NuovaFeature)
 
 Apri una Pull Request
 
-📝 Licenza
+## 📝 Licenza
 Distribuito sotto la licenza MIT. Vedi il file LICENSE per i dettagli.
 
-👨‍💻 Autore
+## 👨‍💻 Autore
 Flavio Montesi
 
 GitHub: @Montesi-Flavio
