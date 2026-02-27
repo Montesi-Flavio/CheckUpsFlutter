@@ -36,7 +36,7 @@ L'obiettivo del progetto è fornire un'interfaccia utente pulita, intuitiva e re
 * **Framework:** [Flutter](https://flutter.dev/)
 * **Linguaggio:** [Dart](https://dart.dev/)
 * **State Management:** [Riverpod](https://riverpod.dev/it/)
-* **Database:** [Postgres]
+* **Database:** [Postgres](https://www.postgresql.org)
 * **Altre Librerie (Packages):** * `[nome_pacchetto_1]`: per [funzionalità]
     * `[nome_pacchetto_2]`: per [funzionalità]
 
