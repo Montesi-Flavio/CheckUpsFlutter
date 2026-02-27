@@ -59,3 +59,50 @@ Assicurati di avere installato sul tuo sistema:
 1. **Clona il repository:**
    ```bash
    git clone [https://github.com/Montesi-Flavio/CheckUpsFlutter.git](https://github.com/Montesi-Flavio/CheckUpsFlutter.git)
+Naviga nella cartella:
+
+Bash
+
+cd CheckUpsFlutter
+Scarica le dipendenze:
+
+Bash
+
+flutter pub get
+Avvia l'app:
+
+Bash
+
+flutter run
+📂 Struttura del Progetto
+Panoramica della cartella lib/:
+
+Plaintext
+
+lib/
+ ┣ models/       # Modelli dati
+ ┣ screens/      # Schermate dell'app
+ ┣ widgets/      # Componenti UI riutilizzabili
+ ┣ services/     # Logica di business e Database
+ ┣ utils/        # Costanti e temi
+ ┗ main.dart     # Entry point
+🤝 Contribuire
+I contributi sono benvenuti!
+
+Fai un Fork del progetto
+
+Crea un branch (git checkout -b feature/NuovaFeature)
+
+Fai un commit (git commit -m 'Aggiunta feature')
+
+Fai il push (git push origin feature/NuovaFeature)
+
+Apri una Pull Request
+
+📝 Licenza
+Distribuito sotto la licenza MIT. Vedi il file LICENSE per i dettagli.
+
+👨‍💻 Autore
+Flavio Montesi
+
+GitHub: @Montesi-Flavio
