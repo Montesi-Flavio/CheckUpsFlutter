@@ -1,13 +1,13 @@
 
 # CheckUpsFlutter 🩺📱
 
-![Flutter Version](https://img.shields.io/badge/Flutter-3.x-blue.svg)
-![Dart Version](https://img.shields.io/badge/Dart-3.x-blue.svg)
+![Flutter Version](https://img.shields.io/badge/Flutter-3.41.x-blue.svg)
+![Dart Version](https://img.shields.io/badge/Dart-3.11.x-blue.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-**CheckUpsFlutter** è un'applicazione mobile sviluppata in Flutter progettata per [inserire qui lo scopo principale dell'app: es. gestire, monitorare e ricordare i controlli medici / la manutenzione dei veicoli / le scadenze importanti]. 
+**CheckUpsFlutter** è un'applicazione mobile sviluppata in Flutter progettata per la gestione dei Clienti per un'azienda di sicurezza sul lavoro. 
 
-L'obiettivo del progetto è fornire un'interfaccia utente pulita, intuitiva e reattiva per permettere agli utenti di tenere traccia dei propri check-up in modo semplice e organizzato.
+L'obiettivo del progetto è fornire un'interfaccia utente pulita, intuitiva e reattiva per permettere agli utenti di tenere traccia dei propri check-up in modo semplice e organizzato, creare PDF da inviare ai clienti e ricordare automaticamente con una mail le scadenze dei contratti.
 
 ---
 
