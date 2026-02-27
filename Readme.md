@@ -24,10 +24,14 @@ L'obiettivo del progetto è fornire un'interfaccia utente pulita, intuitiva e re
 ## ✨ Funzionalità Principali (Features)
 
 * **Gestione dei Check-up:** Aggiungi, modifica ed elimina i tuoi controlli periodici.
-* **Notifiche e Promemoria:** Ricevi avvisi in prossimità delle scadenze (se implementato).
+* **Gestione dei Clienti:** Crea, modifica ed elimina le società, unità locali, reparti, oggetti, titoli, provvedimenti.
+* TODO: **Gestione dei dipendenti:** Aggiunta, modifica, eliminazione dei dipendenti di una società per garantire la persistenza e il rinnovo dei documenti importanti che ogni dipendente deve avere.
+* **Creazione PDF:** Creazione di un report per azienda con tutti i dati dei reparti interessati.
+* **Invio mail:** Invio automatico di mail per le scadenze degli interventi.
+* **Notifiche e Promemoria:** Ricevi avvisi in prossimità delle scadenze.
 * **Interfaccia Intuitiva:** Design moderno basato su Material Design / Cupertino.
-* **Archiviazione Dati:** Salvataggio locale [o in Cloud tramite Firebase/Supabase - specifica qui].
-* **Supporto Multi-piattaforma:** Compilabile per Android e iOS da un singolo codice sorgente.
+* **Archiviazione Dati:** Salvataggio locale [Postgres].
+* **Supporto Multi-piattaforma:** Compilabile per Android e iOS e windows da un singolo codice sorgente.
 
 ---
 
