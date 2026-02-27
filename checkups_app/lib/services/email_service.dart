@@ -14,12 +14,7 @@ class EmailService {
     smtpServer = gmail(username, password);
   }
 
-  Future<void> sendEmail({
-    required String to,
-    required String subject,
-    required String text,
-    String? html,
-  }) async {
+  Future<void> sendEmail({required String to, required String subject, required String text, String? html}) async {
     final message = Message()
       ..from = Address(username, 'CheckUps System')
       ..recipients.add(to)
@@ -29,11 +24,11 @@ class EmailService {
 
     try {
       await send(message, smtpServer);
-      print('Email sent successfully to \$to');
+      print('Email sent successfully to $to');
     } on MailerException catch (e) {
-      print('Message not sent to \$to. \\n\${e.toString()}');
+      print('Message not sent to $to. \n${e.toString()}');
       for (var p in e.problems) {
-        print('Problem: \${p.code}: \${p.msg}');
+        print('Problem: ${p.code}: ${p.msg}');
       }
     }
   }
@@ -41,7 +36,7 @@ class EmailService {
   Future<int> checkAndSendDeadlines(DatabaseRepository repo) async {
     int sentCount = 0;
     try {
-      // 1. Get scadenze in scadenza (es. entro 30 giorni) e non risolte
+      // 1. Get scadenze in scadenza (es. entro 20 giorni) e non risolte
       final result = await repo.getScadenzeForAutomatedEmail();
 
       for (var row in result) {
@@ -54,30 +49,24 @@ class EmailService {
           await sendEmail(
             to: email.toString(),
             subject: 'Avviso Scadenza Intervento CheckUps',
-            text: '''Buongiorno,
+            text:
+                '''Buongiorno,
 
-Le ricordiamo che vi è un intervento in scadenza il \$scadenzaStr:
+Le ricordiamo che vi è un intervento in scadenza il $scadenzaStr:
 
-Genere: \${row['genere']}
-Categoria: \${row['categoria']}
+Genere: ${row['genere'] ?? 'Non specificato'}
 
 Cordiali Saluti,
 CheckUps System''',
           );
 
           // Aggiorna come inviato
-          await repo.updateCampoInt(
-            'scadenze_interventi',
-            'id_scadenza',
-            int.parse(idScadenza.toString()),
-            'preavviso_assolto',
-            1,
-          );
+          await repo.markPreavvisoAssolto(int.parse(idScadenza.toString()));
           sentCount++;
         }
       }
     } catch (e) {
-      print('Error during automated deadline check: \$e');
+      print('Error during automated deadline check: $e');
     }
     return sentCount;
   }

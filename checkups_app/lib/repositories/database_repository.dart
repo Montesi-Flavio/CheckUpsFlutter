@@ -8,22 +8,15 @@ import '../models/oggetto.dart';
 import '../models/provvedimento.dart';
 import '../models/import_dtos.dart';
 import '../models/scadenza.dart';
+import '../models/genere_scadenza.dart';
 
 class DatabaseRepository {
   late final Pool _pool;
 
   DatabaseRepository() {
-    _pool = Pool.withEndpoints(
-      [
-        Endpoint(
-          host: 'localhost',
-          database: 'checkups_db',
-          username: 'postgres',
-          password: 'postgres',
-        ),
-      ],
-      settings: PoolSettings(maxConnectionCount: 10, sslMode: SslMode.disable),
-    );
+    _pool = Pool.withEndpoints([
+      Endpoint(host: 'localhost', database: 'checkups_db', username: 'postgres', password: 'postgres'),
+    ], settings: PoolSettings(maxConnectionCount: 10, sslMode: SslMode.disable));
   }
 
   Future<void> close() async {
@@ -48,9 +41,7 @@ class DatabaseRepository {
         bancaAppoggio: map['banca_appoggio'] as String?,
         codiceAteco: map['codice_ateco'] as String?,
         email: map['email'] as String?,
-        logoBytes:
-            map['logo']
-                as Uint8List?, // postgres driver returns Uint8List for bytea
+        logoBytes: map['logo'] as Uint8List?, // postgres driver returns Uint8List for bytea
       );
     }).toList();
   }
@@ -135,9 +126,7 @@ class DatabaseRepository {
   }
 
   Future<List<Provvedimento>> getProvvedimentiScaduti() async {
-    final result = await _pool.execute(
-      'SELECT * FROM public.provvedimenti WHERE data_scadenza < CURRENT_DATE',
-    );
+    final result = await _pool.execute('SELECT * FROM public.provvedimenti WHERE data_scadenza < CURRENT_DATE');
     return result.map((row) {
       final map = row.toColumnMap();
       return Provvedimento(
@@ -155,22 +144,32 @@ class DatabaseRepository {
     }).toList();
   }
 
+  Future<List<GenereScadenza>> getGeneriScadenze() async {
+    final result = await _pool.execute('SELECT id, title FROM public.generi_scadenze ORDER BY title ASC');
+    return result.map((row) {
+      final map = row.toColumnMap();
+      return GenereScadenza(id: map['id'] as int, title: map['title'] as String);
+    }).toList();
+  }
+
   Future<List<Scadenza>> getScadenzeByUnitaLocale(int idUnitaLocale) async {
-    final result = await _pool.execute(
-      Sql.named(
-        'SELECT * FROM public.scadenze_interventi WHERE id_unita_locale = @id',
-      ),
-      parameters: {'id': idUnitaLocale},
-    );
+    final sql = '''
+      SELECT s.*, g.title as titolo_genere 
+      FROM public.scadenze_interventi s
+      LEFT JOIN public.generi_scadenze g ON s.genere__id = g.id
+      WHERE s.id_unita_locale = @id
+    ''';
+    final result = await _pool.execute(Sql.named(sql), parameters: {'id': idUnitaLocale});
     return result.map((row) {
       final map = row.toColumnMap();
       return Scadenza(
         id: map['id_scadenza'] as int,
         idUnitaLocale: map['id_unita_locale'] as int,
-        genere: map['genere'] as String? ?? '',
-        categoria: map['categoria'] as String? ?? '',
-        type: map['type'] as String? ?? '',
-        periodicita: map['periodicita'] as int? ?? 0,
+        idGenere: map['genere__id'] as int?,
+        titoloGenere: map['titolo_genere'] as String?,
+        categoria: map['categoria'] as String?,
+        type: map['type'] as String?,
+        periodicita: map['periodicita'] as int? ?? 1,
         scadenza: map['scadenza'] as DateTime?,
         avvisoScadenza: map['avviso_scadenza'] as String? ?? '',
         preavvisoAssolto: (map['preavviso_assolto'] as int? ?? 0) == 1,
@@ -180,17 +179,18 @@ class DatabaseRepository {
   }
 
   Future<List<Map<String, dynamic>>> getScadenzeForAutomatedEmail() async {
-    // Cerchiamo le scadenze nei prossimi 30 giorni che non hanno il preavviso assolto
+    // Cerchiamo le scadenze nei prossimi 20 giorni che non hanno il preavviso assolto
     // E facciamo una join con unita_locali e societa per prendere l'email
     final sql = '''
-      SELECT s.id_scadenza, s.genere, s.categoria, s.type, s.scadenza,
+      SELECT s.id_scadenza, g.title as genere, s.categoria, s.type, s.scadenza,
              COALESCE(u.email, soc.email) as email
       FROM public.scadenze_interventi s
+      LEFT JOIN public.generi_scadenze g ON s.genere__id = g.id
       LEFT JOIN public.unita_locali u ON s.id_unita_locale = u.id_unita_locale
       LEFT JOIN public.societa soc ON u.id_societa = soc.id_societa
       WHERE s.preavviso_assolto = 0 
         AND s.scadenza IS NOT NULL
-        AND s.scadenza BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '30 days'
+        AND s.scadenza BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '20 days'
     ''';
 
     final result = await _pool.execute(sql);
@@ -290,9 +290,7 @@ class DatabaseRepository {
 
   Future<void> insertSocieta(Societa societa) async {
     // Get next ID
-    final maxIdResult = await _pool.execute(
-      'SELECT COALESCE(MAX(id_societa), 0) + 1 as next_id FROM public.societa',
-    );
+    final maxIdResult = await _pool.execute('SELECT COALESCE(MAX(id_societa), 0) + 1 as next_id FROM public.societa');
     final nextId = maxIdResult.first.toColumnMap()['next_id'] as int;
 
     await _pool.execute(
@@ -319,9 +317,7 @@ class DatabaseRepository {
 
   Future<void> insertUnitaLocale(UnitaLocale unitaLocale) async {
     // Get next ID
-    final maxIdResult = await _pool.execute(
-      'SELECT COALESCE(MAX(id_unita_locale), 0) + 1 as next_id FROM public.unita_locali',
-    );
+    final maxIdResult = await _pool.execute('SELECT COALESCE(MAX(id_unita_locale), 0) + 1 as next_id FROM public.unita_locali');
     final nextId = maxIdResult.first.toColumnMap()['next_id'] as int;
 
     await _pool.execute(
@@ -360,29 +356,15 @@ class DatabaseRepository {
 
   Future<void> insertTitolo(Titolo titolo) async {
     await _pool.execute(
-      Sql.named(
-        'INSERT INTO public.titoli (id_titolo, id_reparto, priorita, descrizione) VALUES (@id, @idReparto, @priorita, @descrizione)',
-      ),
-      parameters: {
-        'id': titolo.id,
-        'idReparto': titolo.idReparto,
-        'priorita': titolo.priorita,
-        'descrizione': titolo.descrizione,
-      },
+      Sql.named('INSERT INTO public.titoli (id_titolo, id_reparto, priorita, descrizione) VALUES (@id, @idReparto, @priorita, @descrizione)'),
+      parameters: {'id': titolo.id, 'idReparto': titolo.idReparto, 'priorita': titolo.priorita, 'descrizione': titolo.descrizione},
     );
   }
 
   Future<void> insertOggetto(Oggetto oggetto) async {
     await _pool.execute(
-      Sql.named(
-        'INSERT INTO public.oggetti (id_oggetto, priorita, nome, id_titolo) VALUES (@id, @priorita, @nome, @idTitolo)',
-      ),
-      parameters: {
-        'id': oggetto.id,
-        'priorita': oggetto.priorita,
-        'nome': oggetto.nome,
-        'idTitolo': oggetto.idTitolo,
-      },
+      Sql.named('INSERT INTO public.oggetti (id_oggetto, priorita, nome, id_titolo) VALUES (@id, @priorita, @nome, @idTitolo)'),
+      parameters: {'id': oggetto.id, 'priorita': oggetto.priorita, 'nome': oggetto.nome, 'idTitolo': oggetto.idTitolo},
     );
   }
 
@@ -407,21 +389,19 @@ class DatabaseRepository {
   }
 
   Future<void> insertScadenza(Scadenza scadenza) async {
-    final maxIdResult = await _pool.execute(
-      'SELECT COALESCE(MAX(id_scadenza), 0) + 1 as next_id FROM public.scadenze_interventi',
-    );
+    final maxIdResult = await _pool.execute('SELECT COALESCE(MAX(id_scadenza), 0) + 1 as next_id FROM public.scadenze_interventi');
     final nextId = maxIdResult.first.toColumnMap()['next_id'] as int;
 
     await _pool.execute(
       Sql.named(
-        'INSERT INTO public.scadenze_interventi (id_scadenza, id_unita_locale, genere, categoria, type, periodicita, scadenza, avviso_scadenza, preavviso_assolto, note) VALUES (@id, @idUnitaLocale, @genere, @categoria, @type, @periodicita, @scadenza, @avvisoScadenza, @preavvisoAssolto, @note)',
+        'INSERT INTO public.scadenze_interventi (id_scadenza, id_unita_locale, genere__id, categoria, type, periodicita, scadenza, avviso_scadenza, preavviso_assolto, note) VALUES (@id, @idUnitaLocale, @genereId, @categoria, @type, @periodicita, @scadenza, @avvisoScadenza, @preavvisoAssolto, @note)',
       ),
       parameters: {
         'id': nextId,
         'idUnitaLocale': scadenza.idUnitaLocale,
-        'genere': scadenza.genere,
-        'categoria': scadenza.categoria,
-        'type': scadenza.type,
+        'genereId': scadenza.idGenere,
+        'categoria': scadenza.categoria ?? '',
+        'type': scadenza.type ?? '',
         'periodicita': scadenza.periodicita,
         'scadenza': scadenza.scadenza,
         'avvisoScadenza': scadenza.avvisoScadenza,
@@ -433,64 +413,20 @@ class DatabaseRepository {
 
   // *** Update Methods ***
 
-  Future<void> updateCampoStringa(
-    String tableName,
-    String pkName,
-    int id,
-    String campo,
-    String? value,
-  ) async {
-    await _pool.execute(
-      Sql.named(
-        'UPDATE public.$tableName SET $campo = @value WHERE $pkName = @id',
-      ),
-      parameters: {'id': id, 'value': value},
-    );
+  Future<void> updateCampoStringa(String tableName, String pkName, int id, String campo, String? value) async {
+    await _pool.execute(Sql.named('UPDATE public.$tableName SET $campo = @value WHERE $pkName = @id'), parameters: {'id': id, 'value': value});
   }
 
-  Future<void> updateCampoInt(
-    String tableName,
-    String pkName,
-    int id,
-    String campo,
-    int value,
-  ) async {
-    await _pool.execute(
-      Sql.named(
-        'UPDATE public.$tableName SET $campo = @value WHERE $pkName = @id',
-      ),
-      parameters: {'id': id, 'value': value},
-    );
+  Future<void> updateCampoInt(String tableName, String pkName, int id, String campo, int value) async {
+    await _pool.execute(Sql.named('UPDATE public.$tableName SET $campo = @value WHERE $pkName = @id'), parameters: {'id': id, 'value': value});
   }
 
-  Future<void> updateCampoDate(
-    String tableName,
-    String pkName,
-    int id,
-    String campo,
-    DateTime? value,
-  ) async {
-    await _pool.execute(
-      Sql.named(
-        'UPDATE public.$tableName SET $campo = @value WHERE $pkName = @id',
-      ),
-      parameters: {'id': id, 'value': value},
-    );
+  Future<void> updateCampoDate(String tableName, String pkName, int id, String campo, DateTime? value) async {
+    await _pool.execute(Sql.named('UPDATE public.$tableName SET $campo = @value WHERE $pkName = @id'), parameters: {'id': id, 'value': value});
   }
 
-  Future<void> updateCampoBinary(
-    String tableName,
-    String pkName,
-    int id,
-    String campo,
-    Uint8List? value,
-  ) async {
-    await _pool.execute(
-      Sql.named(
-        'UPDATE public.$tableName SET $campo = @value:bytea WHERE $pkName = @id',
-      ),
-      parameters: {'id': id, 'value': value},
-    );
+  Future<void> updateCampoBinary(String tableName, String pkName, int id, String campo, Uint8List? value) async {
+    await _pool.execute(Sql.named('UPDATE public.$tableName SET $campo = @value:bytea WHERE $pkName = @id'), parameters: {'id': id, 'value': value});
   }
 
   Future<void> updateSocieta(Societa societa) async {
@@ -552,27 +488,15 @@ class DatabaseRepository {
 
   Future<void> updateTitolo(Titolo titolo) async {
     await _pool.execute(
-      Sql.named(
-        'UPDATE public.titoli SET priorita = @priorita, descrizione = @descrizione WHERE id_titolo = @id',
-      ),
-      parameters: {
-        'id': titolo.id,
-        'priorita': titolo.priorita,
-        'descrizione': titolo.descrizione,
-      },
+      Sql.named('UPDATE public.titoli SET priorita = @priorita, descrizione = @descrizione WHERE id_titolo = @id'),
+      parameters: {'id': titolo.id, 'priorita': titolo.priorita, 'descrizione': titolo.descrizione},
     );
   }
 
   Future<void> updateOggetto(Oggetto oggetto) async {
     await _pool.execute(
-      Sql.named(
-        'UPDATE public.oggetti SET priorita = @priorita, nome = @nome WHERE id_oggetto = @id',
-      ),
-      parameters: {
-        'id': oggetto.id,
-        'priorita': oggetto.priorita,
-        'nome': oggetto.nome,
-      },
+      Sql.named('UPDATE public.oggetti SET priorita = @priorita, nome = @nome WHERE id_oggetto = @id'),
+      parameters: {'id': oggetto.id, 'priorita': oggetto.priorita, 'nome': oggetto.nome},
     );
   }
 
@@ -598,14 +522,14 @@ class DatabaseRepository {
   Future<void> updateScadenza(Scadenza scadenza) async {
     await _pool.execute(
       Sql.named(
-        'UPDATE public.scadenze_interventi SET id_unita_locale = @idUnitaLocale, genere = @genere, categoria = @categoria, type = @type, periodicita = @periodicita, scadenza = @scadenza, avviso_scadenza = @avvisoScadenza, preavviso_assolto = @preavvisoAssolto, note = @note WHERE id_scadenza = @id',
+        'UPDATE public.scadenze_interventi SET id_unita_locale = @idUnitaLocale, genere__id = @genereId, categoria = @categoria, type = @type, periodicita = @periodicita, scadenza = @scadenza, avviso_scadenza = @avvisoScadenza, preavviso_assolto = @preavvisoAssolto, note = @note WHERE id_scadenza = @id',
       ),
       parameters: {
         'id': scadenza.id,
         'idUnitaLocale': scadenza.idUnitaLocale,
-        'genere': scadenza.genere,
-        'categoria': scadenza.categoria,
-        'type': scadenza.type,
+        'genereId': scadenza.idGenere,
+        'categoria': scadenza.categoria ?? '',
+        'type': scadenza.type ?? '',
         'periodicita': scadenza.periodicita,
         'scadenza': scadenza.scadenza,
         'avvisoScadenza': scadenza.avvisoScadenza,
@@ -615,13 +539,14 @@ class DatabaseRepository {
     );
   }
 
+  Future<void> markPreavvisoAssolto(int idScadenza) async {
+    await _pool.execute(Sql.named('UPDATE public.scadenze_interventi SET preavviso_assolto = 1 WHERE id_scadenza = @id'), parameters: {'id': idScadenza});
+  }
+
   // *** Fetch Children Methods for Deep Import ***
 
   Future<List<Oggetto>> getOggettiByTitoloId(int idTitolo) async {
-    final result = await _pool.execute(
-      Sql.named('SELECT * FROM public.oggetti WHERE id_titolo = @id'),
-      parameters: {'id': idTitolo},
-    );
+    final result = await _pool.execute(Sql.named('SELECT * FROM public.oggetti WHERE id_titolo = @id'), parameters: {'id': idTitolo});
     return result.map((row) {
       final map = row.toColumnMap();
       return Oggetto(
@@ -634,10 +559,7 @@ class DatabaseRepository {
   }
 
   Future<List<Provvedimento>> getProvvedimentiByOggettoId(int idOggetto) async {
-    final result = await _pool.execute(
-      Sql.named('SELECT * FROM public.provvedimenti WHERE id_oggetto = @id'),
-      parameters: {'id': idOggetto},
-    );
+    final result = await _pool.execute(Sql.named('SELECT * FROM public.provvedimenti WHERE id_oggetto = @id'), parameters: {'id': idOggetto});
     return result.map((row) {
       final map = row.toColumnMap();
       return Provvedimento(
@@ -670,20 +592,14 @@ class DatabaseRepository {
   }
 
   Future<void> deleteRecord(String tableName, String pkName, int id) async {
-    await _pool.execute(
-      Sql.named('DELETE FROM public.$tableName WHERE $pkName = @id'),
-      parameters: {'id': id},
-    );
+    await _pool.execute(Sql.named('DELETE FROM public.$tableName WHERE $pkName = @id'), parameters: {'id': id});
   }
 
   // *** Recursive Delete Methods ***
 
   Future<void> deleteOggettoRecursive(int idOggetto) async {
     // Delete Provvedimenti associated with this Oggetto
-    await _pool.execute(
-      Sql.named('DELETE FROM public.provvedimenti WHERE id_oggetto = @id'),
-      parameters: {'id': idOggetto},
-    );
+    await _pool.execute(Sql.named('DELETE FROM public.provvedimenti WHERE id_oggetto = @id'), parameters: {'id': idOggetto});
     // Delete the Oggetto itself
     await deleteRecord('oggetti', 'id_oggetto', idOggetto);
   }
@@ -691,16 +607,11 @@ class DatabaseRepository {
   Future<void> deleteTitoloRecursive(int idTitolo) async {
     // Delete Provvedimenti indirectly associated via Oggetti
     await _pool.execute(
-      Sql.named(
-        'DELETE FROM public.provvedimenti WHERE id_oggetto IN (SELECT id_oggetto FROM public.oggetti WHERE id_titolo = @id)',
-      ),
+      Sql.named('DELETE FROM public.provvedimenti WHERE id_oggetto IN (SELECT id_oggetto FROM public.oggetti WHERE id_titolo = @id)'),
       parameters: {'id': idTitolo},
     );
     // Delete Oggetti associated with this Titolo
-    await _pool.execute(
-      Sql.named('DELETE FROM public.oggetti WHERE id_titolo = @id'),
-      parameters: {'id': idTitolo},
-    );
+    await _pool.execute(Sql.named('DELETE FROM public.oggetti WHERE id_titolo = @id'), parameters: {'id': idTitolo});
     // Delete the Titolo itself
     await deleteRecord('titoli', 'id_titolo', idTitolo);
   }
@@ -721,16 +632,11 @@ class DatabaseRepository {
     );
     // Delete Oggetti indirectly associated via Titoli
     await _pool.execute(
-      Sql.named(
-        'DELETE FROM public.oggetti WHERE id_titolo IN (SELECT id_titolo FROM public.titoli WHERE id_reparto = @id)',
-      ),
+      Sql.named('DELETE FROM public.oggetti WHERE id_titolo IN (SELECT id_titolo FROM public.titoli WHERE id_reparto = @id)'),
       parameters: {'id': idReparto},
     );
     // Delete Titoli associated with this Reparto
-    await _pool.execute(
-      Sql.named('DELETE FROM public.titoli WHERE id_reparto = @id'),
-      parameters: {'id': idReparto},
-    );
+    await _pool.execute(Sql.named('DELETE FROM public.titoli WHERE id_reparto = @id'), parameters: {'id': idReparto});
     // Delete the Reparto itself
     await deleteRecord('reparti', 'id_reparto', idReparto);
   }
