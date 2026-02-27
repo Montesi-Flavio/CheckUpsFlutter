@@ -67,7 +67,7 @@ Assicurati di avere installato sul tuo sistema:
    ```
 ---
 
-📂 Struttura del Progetto
+## 📂 Struttura del Progetto
 Panoramica della cartella lib/:
 
    ```Plaintext
