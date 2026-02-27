@@ -88,5 +88,5 @@ lib/
 Distribuito sotto la licenza MIT. Vedi il file LICENSE per i dettagli.
 
 ## 👨‍💻 Autore
-# Flavio Montesi
+### Flavio Montesi
 - GitHub: @Montesi-Flavio
