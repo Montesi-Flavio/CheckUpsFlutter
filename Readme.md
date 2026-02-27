@@ -59,26 +59,22 @@ Assicurati di avere installato sul tuo sistema:
 1. **Clona il repository:**
    ```bash
    git clone [https://github.com/Montesi-Flavio/CheckUpsFlutter.git](https://github.com/Montesi-Flavio/CheckUpsFlutter.git)
-Naviga nella cartella:
-
-Bash
-
-cd CheckUpsFlutter
-Scarica le dipendenze:
-
-Bash
-
-flutter pub get
-Avvia l'app:
-
-Bash
-
-flutter run
+2. Naviga nella cartella:
+   ```bash
+      cd CheckUpsFlutter
+   ```
+3. Scarica le dipendenze:
+   ```bash
+      flutter pub get
+   ```
+4. Avvia l'app:
+   ```bash
+      flutter run
+   ```
 📂 Struttura del Progetto
 Panoramica della cartella lib/:
 
-Plaintext
-   ```bash
+   ```Plaintext
 lib/
  ┣ models/       # Modelli dati
  ┣ screens/      # Schermate dell'app
