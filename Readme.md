@@ -90,3 +90,5 @@ Distribuito sotto la licenza MIT. Vedi il file LICENSE per i dettagli.
 ## 👨‍💻 Autore
 ### Flavio Montesi
 - GitHub: @Montesi-Flavio
+### Tommaso Remedi
+- GitHub: @Reme240400
