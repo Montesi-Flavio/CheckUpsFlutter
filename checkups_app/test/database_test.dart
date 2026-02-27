@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('Database Connection and Fetch Societa', () async {
     final repo = DatabaseRepository();
-    
+
     try {
       final societaList = await repo.getSocietaList();
       print('Fetched ${societaList.length} societa');
