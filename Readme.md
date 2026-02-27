@@ -11,16 +11,6 @@ L'obiettivo del progetto è fornire un'interfaccia utente pulita, intuitiva e re
 
 ---
 
-## 📸 Screenshot
-
-| Home Page | Dettaglio Check-up | Impostazioni |
-| :---: | :---: | :---: |
-| <img src="[Link Immagine 1]" width="200"> | <img src="[Link Immagine 2]" width="200"> | <img src="[Link Immagine 3]" width="200"> |
-
-*(Aggiungi qui i link agli screenshot della tua applicazione per mostrare l'interfaccia agli utenti).*
-
----
-
 ## ✨ Funzionalità Principali (Features)
 
 * **Gestione dei Check-up:** Aggiungi, modifica ed elimina i tuoi controlli periodici.
@@ -75,6 +65,8 @@ Assicurati di avere installato sul tuo sistema:
    ```bash
       flutter run
    ```
+---
+
 📂 Struttura del Progetto
 Panoramica della cartella lib/:
 
