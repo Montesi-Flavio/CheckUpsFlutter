@@ -260,6 +260,129 @@ class _ScadenzeListScreenState extends State<ScadenzeListScreen> {
     }
   }
 
+  Future<void> _showRinnovaDialog(Scadenza scadenza) async {
+    final mesiCtrl = TextEditingController(
+      text: scadenza.periodicita.toString(),
+    );
+    DateTime selectedDate = scadenza.scadenza ?? DateTime.now();
+    final formKey = GlobalKey<FormState>();
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: const Text('Rinnova Scadenza'),
+              content: SingleChildScrollView(
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        controller: mesiCtrl,
+                        decoration: const InputDecoration(
+                          labelText: 'Periodicità (mesi)',
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (v) =>
+                            v!.isEmpty ? 'Campo obbligatorio' : null,
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Nuova Data: \${_dateFormat.format(selectedDate)}',
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              final picked = await showDatePicker(
+                                context: context,
+                                initialDate: selectedDate,
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100),
+                              );
+                              if (picked != null) {
+                                setStateDialog(() {
+                                  selectedDate = picked;
+                                });
+                              }
+                            },
+                            child: const Text('Seleziona Data'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Annulla'),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      final newScadenza = Scadenza(
+                        id: scadenza.id,
+                        idUnitaLocale: scadenza.idUnitaLocale,
+                        genere: scadenza.genere,
+                        categoria: scadenza.categoria,
+                        type: scadenza.type,
+                        periodicita: int.tryParse(mesiCtrl.text) ?? 0,
+                        scadenza: selectedDate,
+                        avvisoScadenza: scadenza.avvisoScadenza,
+                        preavvisoAssolto:
+                            false, // Azzeriamo il preavviso assolto per il prossimo ciclo
+                        note: scadenza.note,
+                      );
+
+                      try {
+                        await context.read<DatabaseRepository>().updateScadenza(
+                          newScadenza,
+                        );
+                        if (mounted) {
+                          Navigator.pop(context);
+                          _refresh();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Scadenza rinnovata con successo'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Errore: \$e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
+                    }
+                  },
+                  child: const Text('Rinnova'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -497,7 +620,21 @@ class _ScadenzeListScreenState extends State<ScadenzeListScreen> {
                                         : theme.primaryColor,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
+                                const SizedBox(height: 8),
+                                ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.orange[700],
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
+                                  ),
+                                  icon: const Icon(Icons.autorenew, size: 18),
+                                  label: const Text('Rinnova'),
+                                  onPressed: () => _showRinnovaDialog(sc),
+                                ),
+                                const SizedBox(height: 8),
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [

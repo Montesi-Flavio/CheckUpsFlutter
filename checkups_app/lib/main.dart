@@ -46,7 +46,10 @@ class _MyAppState extends State<MyApp> {
     // Nota: devi sostituire xxxx con la tua App Password di Gmail per funzionare in prod
     try {
       final repo = DatabaseRepository();
-      final emailService = EmailService(username: 'tuamail@gmail.com', initialPassword: 'xxxx');
+      final emailService = EmailService(
+        username: 'tuamail@gmail.com',
+        initialPassword: 'xxxx',
+      );
       int emailsSent = await emailService.checkAndSendDeadlines(repo);
       if (emailsSent > 0) {
         print("Emails auto inviate all'avvio: \$emailsSent");
@@ -60,7 +63,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [Provider<DatabaseRepository>(create: (_) => DatabaseRepository(), dispose: (_, repo) => repo.close())],
+      providers: [
+        Provider<DatabaseRepository>(
+          create: (_) => DatabaseRepository(),
+          dispose: (_, repo) => repo.close(),
+        ),
+      ],
       child: MaterialApp(
         title: 'CheckUps',
         debugShowCheckedModeBanner: false,
@@ -89,19 +97,29 @@ class _MyAppState extends State<MyApp> {
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(color: Color(0xFF1E88E5), width: 2),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               elevation: 2,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
             ),
           ),
           cardTheme: CardThemeData(
             elevation: 4,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             shadowColor: Colors.black.withOpacity(0.1),
             color: Colors.white,
           ),
